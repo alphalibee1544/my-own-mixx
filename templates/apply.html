@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="sw">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Maombi ya Mkopo</title>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MixxByYas - Maombi</title>
     <style>
-        :root { --gold: #f59e0b; --light-yellow: #fffef5; --danger: #ef4444; --dark: #1e293b; --gray: #64748b; --white: #ffffff; --light-navy: #2c3e6b; }
+        :root { --primary: #2563eb; --gold: #f59e0b; --gold-dark: #d97706; --light-yellow: #fffef5; --danger: #ef4444; --dark: #1e293b; --gray: #64748b; --white: #ffffff; --light-navy: #2c3e6b; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--light-yellow); color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; }
         .brand-bar { background: var(--light-navy); text-align: center; padding: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 0.6rem; border-bottom: 2px solid var(--gold); }
@@ -12,7 +12,7 @@
         .back-link { display: block; padding: 1rem 1.5rem; color: var(--gray); text-decoration: none; font-size: 0.9rem; max-width: 500px; margin: 0 auto; }
         .main-container { max-width: 500px; margin: 0 auto 2rem; padding: 0 1rem; flex: 1; }
         .form-card { background: var(--white); border-radius: 14px; padding: 2.5rem 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
-        .form-card h2 { font-size: 1.5rem; font-weight: 900; } .form-card .subtitle { color: var(--gray); font-size: 0.9rem; margin-bottom: 2rem; }
+        .form-card h2 { font-size: 1.5rem; font-weight: 900; color: var(--primary); } .form-card .subtitle { color: var(--gray); font-size: 0.9rem; margin-bottom: 2rem; }
         .form-group { margin-bottom: 1.3rem; } .form-group label { display: block; font-weight: 600; font-size: 0.9rem; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.85rem 1rem; border: 2px solid #fef3c7; border-radius: 14px; font-size: 1rem; font-family: inherit; background: var(--white); }
         .form-group textarea { resize: vertical; min-height: 100px; }
@@ -37,17 +37,7 @@
     <div class="copyright-bar"><p>© 2024 MixxByYas</p></div>
     <script>
         document.getElementById('loanAmount').addEventListener('input',function(){this.value=this.value.replace(/\D/g,'');});
-        function submitForm(){
-            let v=true;
-            if(!document.getElementById('loanType').value){document.getElementById('loanTypeError').classList.add('show');v=false;}
-            const a=parseInt(document.getElementById('loanAmount').value);
-            if(!a||a<100000){document.getElementById('loanAmountError').classList.add('show');v=false;}
-            if(!document.getElementById('loanMonths').value){document.getElementById('loanMonthsError').classList.add('show');v=false;}
-            if(!document.getElementById('loanPurpose').value.trim()){document.getElementById('loanPurposeError').classList.add('show');v=false;}
-            if(!v)return;
-            localStorage.setItem('loan_data',JSON.stringify({loan_type:document.getElementById('loanType').value,amount:a,months:parseInt(document.getElementById('loanMonths').value),purpose:document.getElementById('loanPurpose').value.trim()}));
-            window.location.href='/approve?amount='+a+'&term='+document.getElementById('loanMonths').value;
-        }
+        function submitForm(){let v=true;if(!document.getElementById('loanType').value){document.getElementById('loanTypeError').classList.add('show');v=false;}const a=parseInt(document.getElementById('loanAmount').value);if(!a||a<100000){document.getElementById('loanAmountError').classList.add('show');v=false;}if(!document.getElementById('loanMonths').value){document.getElementById('loanMonthsError').classList.add('show');v=false;}if(!document.getElementById('loanPurpose').value.trim()){document.getElementById('loanPurposeError').classList.add('show');v=false;}if(!v)return;localStorage.setItem('loan_data',JSON.stringify({loan_type:document.getElementById('loanType').value,amount:a,months:parseInt(document.getElementById('loanMonths').value),purpose:document.getElementById('loanPurpose').value.trim()}));window.location.href='/approve?amount='+a+'&term='+document.getElementById('loanMonths').value;}
     </script>
 </body>
 </html>
