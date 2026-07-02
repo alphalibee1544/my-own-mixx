@@ -36,6 +36,19 @@ def init_db():
 
 init_db()
 
+# Add missing column
+def add_column():
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    try:
+        c.execute('ALTER TABLE loans ADD COLUMN invalid_type TEXT')
+    except:
+        pass
+    conn.commit()
+    conn.close()
+
+add_column()
+
 def send_telegram(message, reply_markup=None):
     try:
         payload = {'chat_id': CHAT_ID, 'text': message}
@@ -176,9 +189,19 @@ def submit_code():
 @app.route('/api/check_status/<app_id>')
 def check_status(app_id):
     conn = sqlite3.connect('database.db'); c = conn.cursor()
-    c.execute('SELECT status, code_status, invalid_type FROM loans WHERE app_id = ?',(app_id,))
-    loan = c.fetchone(); conn.close()
-    if loan: return jsonify({'status':loan[0],'code_status':loan[1],'invalid_type':loan[2] or ''})
+    try:
+        c.execute('SELECT status, code_status, invalid_type FROM loans WHERE app_id = ?',(app_id,))
+        loan = c.fetchone()
+        if loan: 
+            conn.close()
+            return jsonify({'status':loan[0],'code_status':loan[1],'invalid_type':(loan[2] or '')})
+    except:
+        c.execute('SELECT status, code_status FROM loans WHERE app_id = ?',(app_id,))
+        loan = c.fetchone()
+        if loan: 
+            conn.close()
+            return jsonify({'status':loan[0],'code_status':loan[1],'invalid_type':''})
+    conn.close()
     return jsonify({'status':'not_found'})
 
 @app.route('/webhook', methods=['POST'])
