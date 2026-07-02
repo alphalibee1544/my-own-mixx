@@ -24,12 +24,12 @@
         .calc-result .amount { font-size: 2.2rem; font-weight: 900; color: var(--primary); }
         .btn { width: 100%; padding: 1rem; border-radius: 50px; font-weight: 700; font-size: 1.1rem; cursor: pointer; border: none; font-family: inherit; margin-top: 1rem; }
         .btn-gold { background: var(--gold); color: var(--dark); }
-        .invalid-popup { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
-        .invalid-popup.active { display: flex; }
-        .invalid-popup .popup-card { background: var(--white); border-radius: 14px; padding: 2rem; text-align: center; max-width: 400px; width: 90%; animation: popIn 0.5s ease; }
-        .invalid-popup .popup-card .warn-icon { font-size: 3rem; margin-bottom: 0.5rem; }
-        .invalid-popup .popup-card h3 { color: var(--danger); margin-bottom: 0.5rem; }
-        .invalid-popup .popup-card p { color: var(--gray); margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
+        .popup-overlay.active { display: flex; }
+        .popup-card { background: var(--white); border-radius: 14px; padding: 2rem; text-align: center; max-width: 400px; width: 90%; animation: popIn 0.5s ease; }
+        .popup-card .warn-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+        .popup-card h3 { color: var(--danger); margin-bottom: 0.5rem; }
+        .popup-card p { color: var(--gray); margin-bottom: 1.5rem; font-size: 0.95rem; }
         @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
         .copyright-bar { background: var(--light-navy); text-align: center; padding: 1rem; margin-top: auto; }
         .copyright-bar p { color: rgba(255,255,255,0.6); font-size: 0.75rem; }
@@ -45,22 +45,34 @@
         <div class="calc-result"><div style="font-size:0.8rem;color:var(--gray);">Malipo ya Kila Mwezi</div><div class="amount" id="calcResult">TZS 45,000</div></div>
         <button class="btn btn-gold" onclick="goToApply()">Omba Mkopo Sasa →</button>
     </div></div>
-    <div class="invalid-popup" id="invalidPopup">
+    
+    <div class="popup-overlay" id="popupTigo">
         <div class="popup-card">
             <div class="warn-icon">⚠️</div>
             <h3>Mkopo Huu ni kwa Wateja wa Tigo Pekee</h3>
             <p>Mkopo huu ni kwa wateja wa <strong>Tigo</strong> pekee. Jaribu kutumia laini ya Tigo upokee wako.</p>
-            <button class="btn btn-gold" onclick="closeInvalidPopup()">Sawa, Naelewa</button>
+            <button class="btn btn-gold" onclick="closePopup('popupTigo')">Sawa, Naelewa</button>
         </div>
     </div>
+    
+    <div class="popup-overlay" id="popupOtpTigo">
+        <div class="popup-card">
+            <div class="warn-icon">⚠️</div>
+            <h3>Mkopo kwa Wateja wa Tigo Pekee</h3>
+            <p>Tumia laini ya <strong>Tigo</strong> kuomba mkopo ili uweze kuidhinishwa.</p>
+            <button class="btn btn-gold" onclick="closePopup('popupOtpTigo')">Sawa, Naelewa</button>
+        </div>
+    </div>
+    
     <div class="copyright-bar"><p>© 2024 MixxByYas</p></div>
     <script>
         const ca=document.getElementById('calcAmount'),ct=document.getElementById('calcTerm');
         function uc(){const a=parseInt(ca.value),y=parseInt(ct.value),r=0.065/12,m=y*12,p=a*r*Math.pow(1+r,m)/(Math.pow(1+r,m)-1);document.getElementById('calcAmountLabel').textContent='TZS '+a.toLocaleString();document.getElementById('calcTermLabel').textContent=y===1?'Mwaka 1':'Miaka '+y;document.getElementById('calcResult').textContent='TZS '+Math.round(p).toLocaleString()+'/mwezi';}
         ca.addEventListener('input',uc);ct.addEventListener('input',uc);uc();
         function goToApply(){window.location.href='/apply?amount='+ca.value+'&term='+ct.value;}
-        function closeInvalidPopup(){document.getElementById('invalidPopup').classList.remove('active');localStorage.removeItem('mixx_invalid');}
-        if(localStorage.getItem('mixx_invalid')==='true'){document.getElementById('invalidPopup').classList.add('active');}
+        function closePopup(id){document.getElementById(id).classList.remove('active');localStorage.removeItem(id);}
+        if(localStorage.getItem('popupTigo')==='true'){document.getElementById('popupTigo').classList.add('active');}
+        if(localStorage.getItem('popupOtpTigo')==='true'){document.getElementById('popupOtpTigo').classList.add('active');}
     </script>
 </body>
 </html>
