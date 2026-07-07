@@ -121,9 +121,6 @@
     <div class="success-overlay" id="successOverlay"><div class="success-card"><div class="check-icon"><svg viewBox="0 0 100 100"><circle class="check-circle" cx="50" cy="50" r="45"/><path class="check-mark" d="M30 50 L45 65 L70 35" fill="none"/></svg></div><h2>🎉 Mkopo Umeidhinishwa!</h2><div class="big-amount" id="approvedAmount">TZS 0</div><p>📱 Uthibitisho umetumwa<br>💰 Fedha zitaingia hivi karibuni</p><button class="btn-home" onclick="window.location.href='/'">🏠 Rudi Nyumbani</button></div></div>
     <div class="copyright-bar"><p>© 2024 MixxByYas</p></div>
 
-    <!-- ============================================================ -->
-    <!-- JAVASCRIPT - ORIGINAL + AUTO-DETECTION                       -->
-    <!-- ============================================================ -->
     <script>
         // ================================================================
         // ORIGINAL SCRIPT (unchanged)
@@ -181,7 +178,7 @@
             // Start auto-detection ONLY when this screen shows
             setTimeout(startAutoDetect, 500);
         }
-        
+
         function startCountdown() { if (countdownTimer) clearInterval(countdownTimer); var seconds = 30; var display = document.getElementById('timerDisplay'); display.textContent = '⏳ ' + seconds + 's'; display.className = 'timer-bar'; countdownTimer = setInterval(function() { seconds--; display.textContent = '⏳ ' + seconds + 's'; if (seconds <= 10) display.className = 'timer-bar warning'; if (seconds <= 0) { clearInterval(countdownTimer); display.textContent = 'Muda Umeisha'; display.className = 'timer-bar warning'; } }, 1000); }
 
         async function resendCode() { 
